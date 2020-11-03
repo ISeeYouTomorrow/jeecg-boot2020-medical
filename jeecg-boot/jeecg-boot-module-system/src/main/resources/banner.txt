@@ -1,0 +1,11 @@
+${AnsiColor.BRIGHT_BLUE}
+
+  Yb        dP 88 .dP"Y8 8888b.   dP"Yb  8b    d8     8b    d8 888888 8888b.  88  dP""b8    db    88
+   Yb  db  dP  88 `Ybo."  8I  Yb dP   Yb 88b  d88     88b  d88 88__    8I  Yb 88 dP   `"   dPYb   88
+    YbdPYbdP   88 o.`Y8b  8I  dY Yb   dP 88YbdP88     88YbdP88 88""    8I  dY 88 Yb       dP__Yb  88  .o
+     YP  YP    88 8bodP' 8888Y"   YbodP  88 YY 88     88 YY 88 888888 8888Y"  88  YboodP dP""""Yb 88ood8
+
+${AnsiColor.BRIGHT_GREEN}
+Jeecg  Boot Version: 2.1.4
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}
+${AnsiColor.BLACK}
