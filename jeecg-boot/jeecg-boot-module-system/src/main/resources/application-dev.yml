@@ -141,9 +141,9 @@ jeecg :
   uploadType: local
   path :
     #文件上传根目录 设置
-    upload: D://opt//upFiles
+    upload: C://Work//upFiles
     #webapp文件路径
-    webapp: D://opt//webapp
+    webapp: C://Work//webapp
   #短信秘钥
   sms:
      accessKeyId: ??
