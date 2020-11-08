@@ -66,4 +66,7 @@ public class WmAreaSpace implements Serializable {
 	/**备注信息*/
 	@Excel(name = "备注信息", width = 15)
 	private java.lang.String remark;
+
+	/**二维码保存路径 */
+	private java.lang.String qrCodePath;
 }

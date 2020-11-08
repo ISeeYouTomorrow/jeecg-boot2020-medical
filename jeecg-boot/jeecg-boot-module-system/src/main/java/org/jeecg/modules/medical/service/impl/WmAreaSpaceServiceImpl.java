@@ -1,14 +1,16 @@
 package org.jeecg.modules.medical.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.jeecg.common.exception.JeecgBootException;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.medical.entity.WmAreaSpace;
 import org.jeecg.modules.medical.mapper.WmAreaSpaceMapper;
 import org.jeecg.modules.medical.service.IWmAreaSpaceService;
+import org.jeecg.modules.medical.service.MedicalQrCodeService;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import javax.annotation.Resource;
 
 /**
  * @Description: 空间数据
@@ -18,6 +20,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 public class WmAreaSpaceServiceImpl extends ServiceImpl<WmAreaSpaceMapper, WmAreaSpace> implements IWmAreaSpaceService {
+
+	@Resource
+	private MedicalQrCodeService qrCodeService;
+
 
 	@Override
 	public void addWmAreaSpace(WmAreaSpace wmAreaSpace) {
@@ -31,6 +37,8 @@ public class WmAreaSpaceServiceImpl extends ServiceImpl<WmAreaSpaceMapper, WmAre
 				baseMapper.updateById(parent);
 			}
 		}
+		String file = qrCodeService.wmAreaQrCode(wmAreaSpace);
+		wmAreaSpace.setQrCodePath(file);
 		baseMapper.insert(wmAreaSpace);
 	}
 	
@@ -51,6 +59,8 @@ public class WmAreaSpaceServiceImpl extends ServiceImpl<WmAreaSpaceMapper, WmAre
 				baseMapper.updateTreeNodeStatus(wmAreaSpace.getPid(), IWmAreaSpaceService.HASCHILD);
 			}
 		}
+		String file = qrCodeService.wmAreaQrCode(wmAreaSpace);
+		wmAreaSpace.setQrCodePath(file);
 		baseMapper.updateById(wmAreaSpace);
 	}
 	

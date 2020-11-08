@@ -11,10 +11,10 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="父级节点" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="上级类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-tree-select
             ref="treeSelect"
-            placeholder="请选择父级节点"
+            placeholder="请选择上级类别"
             v-decorator="['pid', validatorRules.pid]"
             dict="wm_equipment_type,type_name,id"
             pidField="pid"
@@ -34,8 +34,8 @@
         <a-form-item label="是否计量设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="radio" v-decorator="['measureState', validatorRules.measureState]" :trigger-change="true" dictCode="yn" placeholder="请选择是否计量设备"/>
         </a-form-item>
-        <a-form-item label="备注信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'remark', validatorRules.remark]" placeholder="请输入备注信息"></a-input>
+        <a-form-item label="2012类别代号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'remark', validatorRules.remark]" placeholder="请输入2012类别代号"></a-input>
         </a-form-item>
         
       </a-form>

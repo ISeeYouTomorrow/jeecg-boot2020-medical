@@ -40,6 +40,10 @@
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无此图片</span>
           <img v-else :src="getImgView(text)" height="25px" alt="图片不存在" style="max-width:80px;font-size: 12px;font-style: italic;"/>
         </template>
+        <template slot="measureStateSlot" slot-scope="measureState">
+          <span v-if="measureState == 1" style="font-size: 12px;font-style: italic;">是</span>
+          <span v-else style="font-size: 12px;">否</span>
+        </template>
         <template slot="fileSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无此文件</span>
           <a-button
@@ -95,14 +99,14 @@
         // 表头
         columns: [
           {
-            title:'设备类别',
-            align:"left",
-            dataIndex: 'typeName'
-          },
-          {
             title:'序号',
             align:"left",
             dataIndex: 'sortNumber'
+          },
+          {
+            title:'设备类别',
+            align:"left",
+            dataIndex: 'typeName'
           },
           {
             title:'2018类别代号',
@@ -112,10 +116,11 @@
           {
             title:'是否计量设备',
             align:"left",
-            dataIndex: 'measureState_dictText'
+            dataIndex: 'measureState',
+            scopedSlots: {customRender: 'measureStateSlot'}
           },
           {
-            title:'备注信息',
+            title:'2012类别代号',
             align:"left",
             dataIndex: 'remark'
           },

@@ -38,7 +38,7 @@
         
         <template slot="imgSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无此图片</span>
-          <img v-else :src="getImgView(text)" height="25px" alt="图片不存在" style="max-width:80px;font-size: 12px;font-style: italic;"/>
+          <img @click="uploadFile(text)" v-else :src="getImgView(text)" height="25px" alt="图片不存在" style="cursor: pointer;max-width:80px;font-size: 12px;font-style: italic;"/>
         </template>
         <template slot="fileSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无此文件</span>
@@ -115,6 +115,14 @@
             dataIndex: 'tagCode'
           },
           {
+            title:'二维码',
+            align:"left",
+            dataIndex: 'qrCodePath',
+            scopedSlots: {
+              customRender: 'imgSlot'
+            }
+          },
+          {
             title:'备注信息',
             align:"left",
             dataIndex: 'remark'
@@ -163,9 +171,7 @@
         this.loading = true
         this.expandedRowKeys = []
         let params = this.getQueryParams()
-        params['column'] = 'sortNumber'
-        params['order'] = 'asc'
-        console.log('params ------> ', params)
+        // console.log('params ------> ', params)
         return new Promise((resolve) => {
           getAction(this.url.list,params).then(res=>{
             if(res.success){

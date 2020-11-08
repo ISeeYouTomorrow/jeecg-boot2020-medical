@@ -105,6 +105,13 @@ export const JeecgListMixin = {
       param.field = this.getQueryField();
       param.pageNo = this.ipagination.current;
       param.pageSize = this.ipagination.pageSize;
+      console.log('this.getQueryField=====> ', param.field)
+      if (param.field.indexOf('sortNumber') >= 0) {
+        param['column'] = 'sort_number'
+        param['order'] = 'asc'
+      }
+      // params['column'] = 'sort_number'
+      // params['order'] = 'asc'
       return filterObj(param);
     },
     getQueryField() {
@@ -264,10 +271,10 @@ export const JeecgListMixin = {
             this.$warning({
               title: message,
               content: (
-                <div>
-                  <span>{msg}</span><br/>
-                  <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-                </div>
+                '<div>'+
+                  '<span>{msg}</span><br/>'+
+                '<span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>'+
+                '</div>'
               )
             })
           } else {
