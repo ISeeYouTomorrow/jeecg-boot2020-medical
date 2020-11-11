@@ -64,7 +64,15 @@ public class WmEquipmentInfoPage {
 	/**设备型号*/
 	@Excel(name = "设备型号", width = 15)
 	@ApiModelProperty(value = "设备型号")
+	private java.lang.String equipmentModel;
+	/**设备编号*/
+	@Excel(name = "设备编号", width = 15)
+	@ApiModelProperty(value = "设备编号")
 	private java.lang.String equipmentCode;
+	/**设备二维码*/
+	@Excel(name = "设备二维码", width = 15)
+	@ApiModelProperty(value = "设备二维码")
+	private java.lang.String equipmentQrcode;
 	/**折旧率*/
 	@Excel(name = "折旧率", width = 15)
 	@ApiModelProperty(value = "折旧率")

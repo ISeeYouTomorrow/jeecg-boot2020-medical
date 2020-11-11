@@ -1,19 +1,22 @@
 package org.jeecg.modules.medical.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.jeecg.modules.medical.entity.WmEquipmentApprove;
 import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import org.jeecg.modules.medical.entity.WmInviteBid;
-import org.jeecg.modules.medical.entity.WmEquipmentApprove;
-import org.jeecg.modules.medical.mapper.WmInviteBidMapper;
 import org.jeecg.modules.medical.mapper.WmEquipmentApproveMapper;
 import org.jeecg.modules.medical.mapper.WmEquipmentInfoMapper;
+import org.jeecg.modules.medical.mapper.WmInviteBidMapper;
 import org.jeecg.modules.medical.service.IWmEquipmentInfoService;
-import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Description: 设备档案信息
@@ -24,25 +27,25 @@ import java.util.Collection;
 @Service
 public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMapper, WmEquipmentInfo> implements IWmEquipmentInfoService {
 
-	@Autowired
+	@Resource
 	private WmEquipmentInfoMapper wmEquipmentInfoMapper;
-	@Autowired
+	@Resource
 	private WmInviteBidMapper wmInviteBidMapper;
-	@Autowired
+	@Resource
 	private WmEquipmentApproveMapper wmEquipmentApproveMapper;
 	
 	@Override
 	@Transactional
 	public void saveMain(WmEquipmentInfo wmEquipmentInfo, List<WmInviteBid> wmInviteBidList,List<WmEquipmentApprove> wmEquipmentApproveList) {
 		wmEquipmentInfoMapper.insert(wmEquipmentInfo);
-		if(wmInviteBidList!=null && wmInviteBidList.size()>0) {
+		if(CollectionUtil.isNotEmpty(wmInviteBidList)) {
 			for(WmInviteBid entity:wmInviteBidList) {
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());
 				wmInviteBidMapper.insert(entity);
 			}
 		}
-		if(wmEquipmentApproveList!=null && wmEquipmentApproveList.size()>0) {
+		if(CollectionUtil.isNotEmpty(wmEquipmentApproveList)) {
 			for(WmEquipmentApprove entity:wmEquipmentApproveList) {
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());
@@ -61,14 +64,14 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 		wmEquipmentApproveMapper.deleteByMainId(wmEquipmentInfo.getId());
 		
 		//2.子表数据重新插入
-		if(wmInviteBidList!=null && wmInviteBidList.size()>0) {
+		if(CollectionUtil.isNotEmpty(wmInviteBidList)) {
 			for(WmInviteBid entity:wmInviteBidList) {
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());
 				wmInviteBidMapper.insert(entity);
 			}
 		}
-		if(wmEquipmentApproveList!=null && wmEquipmentApproveList.size()>0) {
+		if(CollectionUtil.isNotEmpty(wmEquipmentApproveList)) {
 			for(WmEquipmentApprove entity:wmEquipmentApproveList) {
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());

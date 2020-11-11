@@ -72,7 +72,7 @@
         }else{
           val = e
         }
-        console.log(val);
+        // console.log(val);
         if(this.triggerChange){
           this.$emit('change', val);
         }else{

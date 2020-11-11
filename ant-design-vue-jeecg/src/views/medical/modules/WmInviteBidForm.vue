@@ -3,17 +3,17 @@
     <a-form :form="form">
       <a-row>
 
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="代理机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input v-decorator="[ 'proxyOrganization', validatorRules.proxyOrganization]" placeholder="请输入代理机构"></a-input>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="开标时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-date placeholder="请选择开标时间" v-decorator="[ 'bidTime', validatorRules.bidTime]" :trigger-change="true" style="width: 100%"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="招标文件" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-upload v-decorator="['bidFile']" :trigger-change="true"></j-upload>
           </a-form-item>

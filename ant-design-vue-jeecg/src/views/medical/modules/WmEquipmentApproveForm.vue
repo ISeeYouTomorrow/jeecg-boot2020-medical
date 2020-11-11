@@ -3,23 +3,23 @@
     <a-form :form="form">
       <a-row>
 
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="申购时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-date placeholder="请选择申购时间" v-decorator="[ 'subscribeTime', validatorRules.subscribeTime]" :trigger-change="true" style="width: 100%"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="申购科室" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-select-depart v-decorator="['subscribeDept']" :trigger-change="true"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="申购人" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-select-user-by-dep v-decorator="['subscribePerson']" :trigger-change="true"/>
 <!--            <j-dict-select-tag type="list" v-decorator="['subscribePerson']" :trigger-change="true" dictCode="" placeholder="请选择申购人"/>-->
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="8">
           <a-form-item label="审批文件" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-upload v-decorator="['approveFile']" :trigger-change="true"></j-upload>
           </a-form-item>

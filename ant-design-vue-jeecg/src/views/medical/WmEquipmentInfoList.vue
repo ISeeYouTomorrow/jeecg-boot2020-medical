@@ -144,11 +144,11 @@
             align:"center",
             dataIndex: 'equipmentName'
           },
-          {
-            title:'设备别名',
-            align:"center",
-            dataIndex: 'equipmentAliasName'
-          },
+          // {
+          //   title:'设备别名',
+          //   align:"center",
+          //   dataIndex: 'equipmentAliasName'
+          // },
           {
             title:'设备型号',
             align:"center",

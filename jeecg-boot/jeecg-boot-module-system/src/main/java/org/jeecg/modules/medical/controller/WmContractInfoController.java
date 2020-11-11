@@ -3,9 +3,12 @@ package org.jeecg.modules.medical.controller;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cn.hutool.core.bean.BeanUtil;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.medical.entity.WmContractInfo;
+import org.jeecg.modules.medical.entity.WmManufacturerInfo;
 import org.jeecg.modules.medical.service.IWmContractInfoService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -14,6 +17,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecg.modules.medical.service.IWmManufacturerInfoService;
+import org.jeecg.modules.medical.vo.WmContractVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,6 +39,9 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class WmContractInfoController extends JeecgController<WmContractInfo, IWmContractInfoService> {
 	@Autowired
 	private IWmContractInfoService wmContractInfoService;
+
+	@Autowired
+	private IWmManufacturerInfoService wmManufacturerInfoService;
 	
 	/**
 	 * 分页列表查询
@@ -129,6 +137,30 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 		}
 		return Result.ok(wmContractInfo);
 	}
+
+	 /**
+	  * 通过id查询合同及厂商信息
+	  *
+	  * @param id 合同id
+	  * @return Result
+	  */
+	 @AutoLog(value = "厂商合同信息管理-通过id查询")
+	 @ApiOperation(value="厂商合同信息管理-通过id查询", notes="厂商合同信息管理-通过id查询")
+	 @GetMapping(value = "/queryDetailById")
+	 public Result<?> queryDetailById(@RequestParam(name="id") String id) {
+		 WmContractInfo wmContractInfo = wmContractInfoService.getById(id);
+		 if(wmContractInfo==null) {
+			 return Result.error("未找到对应数据");
+		 }
+		 WmContractVO vo = new WmContractVO();
+		 BeanUtil.copyProperties(wmContractInfo, vo);
+		 WmManufacturerInfo manufacturerInfo = wmManufacturerInfoService.getById(wmContractInfo.getWmManufacturerId());
+		 if (manufacturerInfo != null) {
+			 vo.setWmManufacturerName(manufacturerInfo.getManufacturerName());
+		 }
+		 return Result.ok(vo);
+	 }
+
 
     /**
     * 导出excel

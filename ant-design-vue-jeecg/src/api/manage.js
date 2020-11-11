@@ -39,6 +39,7 @@ export function putAction(url,parameter) {
 
 //get
 export function getAction(url,parameter) {
+  // console.log('getAction url ====== ',url)
   return axios({
     url: url,
     method: 'get',
