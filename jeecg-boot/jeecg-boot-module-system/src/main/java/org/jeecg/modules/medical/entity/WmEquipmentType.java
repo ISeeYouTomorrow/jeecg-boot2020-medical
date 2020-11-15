@@ -64,7 +64,7 @@ public class WmEquipmentType implements Serializable {
 	@Excel(name = "是否计量设备", width = 15, dicCode = "yn")
 	@Dict(dicCode = "yn")
 	private java.lang.String measureState;
-	/**备注信息*/
-	@Excel(name = "备注信息", width = 15)
+	/**2012类别代号*/
+	@Excel(name = "2012类别代号", width = 15)
 	private java.lang.String remark;
 }

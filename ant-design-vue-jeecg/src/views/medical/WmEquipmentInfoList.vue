@@ -10,8 +10,8 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="设备型号">
-              <a-input placeholder="请输入设备型号" v-model="queryParam.equipmentCode"></a-input>
+            <a-form-item label="设备编号">
+              <a-input placeholder="请输入设备编号" v-model="queryParam.equipmentCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -134,11 +134,11 @@
               return parseInt(index)+1;
             }
           },
-          {
-            title:'设备类型',
-            align:"center",
-            dataIndex: 'equipmentType'
-          },
+          // {
+          //   title:'设备类型',
+          //   align:"center",
+          //   dataIndex: 'equipmentType'
+          // },
           {
             title:'设备名称',
             align:"center",
@@ -151,6 +151,11 @@
           // },
           {
             title:'设备型号',
+            align:"center",
+            dataIndex: 'equipmentModel'
+          },
+          {
+            title:'设备编号',
             align:"center",
             dataIndex: 'equipmentCode'
           },
@@ -205,11 +210,11 @@
             align:"center",
             dataIndex: 'chargePerson_dictText'
           },
-          {
-            title:'安放位置',
-            align:"center",
-            dataIndex: 'chargeArea'
-          },
+          // {
+          //   title:'安放位置',
+          //   align:"center",
+          //   dataIndex: 'chargeArea'
+          // },
           {
             title:'启用时间',
             align:"center",

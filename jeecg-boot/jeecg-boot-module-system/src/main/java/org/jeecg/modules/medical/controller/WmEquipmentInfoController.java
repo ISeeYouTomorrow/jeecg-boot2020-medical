@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import org.jeecg.modules.medical.entity.WmEquipmentType;
+import org.jeecg.modules.medical.service.*;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -24,9 +28,6 @@ import org.jeecg.modules.medical.entity.WmInviteBid;
 import org.jeecg.modules.medical.entity.WmEquipmentApprove;
 import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import org.jeecg.modules.medical.vo.WmEquipmentInfoPage;
-import org.jeecg.modules.medical.service.IWmEquipmentInfoService;
-import org.jeecg.modules.medical.service.IWmInviteBidService;
-import org.jeecg.modules.medical.service.IWmEquipmentApproveService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,13 @@ public class WmEquipmentInfoController {
 	private IWmInviteBidService wmInviteBidService;
 	@Autowired
 	private IWmEquipmentApproveService wmEquipmentApproveService;
-	
+	@Autowired
+	private IWmEquipmentTypeService wmEquipmentTypeService;
+	@Autowired
+	private MedicalQrCodeService qrCodeService;
+
+	private final Object object = new Object();
+
 	/**
 	 * 分页列表查询
 	 *
@@ -91,9 +98,41 @@ public class WmEquipmentInfoController {
 	@ApiOperation(value="设备档案信息-添加", notes="设备档案信息-添加")
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody WmEquipmentInfoPage wmEquipmentInfoPage) {
-		WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
-		BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
-		wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
+		String typeId = wmEquipmentInfoPage.getEquipmentType();
+		WmEquipmentType equipmentType = wmEquipmentTypeService.getById(typeId);
+		String code = equipmentType.getTypeAlias18();
+
+		int count = 0;
+		synchronized (object) {
+			count = wmEquipmentInfoService.getEquipmentTypeCount(typeId);
+		}
+		//设备个数
+		int num = wmEquipmentInfoPage.getProcurementNumber();
+
+		//设备采购多个需要插入多条记录，且生成对应的编号和二维码
+		if (num == 1) {
+			String equipmentCode = code + "-" + String.format("%04d", ++count);
+			WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
+			BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
+			wmEquipmentInfo.setEquipmentCode(equipmentCode);
+			//生成设备二维码和设备编号
+			String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
+			wmEquipmentInfo.setEquipmentQrcode(path);
+			wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
+		} else if (num > 1) {
+			for (int i = 0; i < num; i++) {
+				String equipmentCode = code + "-" + String.format("%04d", ++count);
+				WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
+				BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
+				wmEquipmentInfo.setId(IdWorker.get32UUID());
+				wmEquipmentInfo.setEquipmentCode(equipmentCode);
+				//生成设备二维码和设备编号
+				String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
+				wmEquipmentInfo.setEquipmentQrcode(path);
+				wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
+			}
+		}
+
 		return Result.ok("添加成功！");
 	}
 	

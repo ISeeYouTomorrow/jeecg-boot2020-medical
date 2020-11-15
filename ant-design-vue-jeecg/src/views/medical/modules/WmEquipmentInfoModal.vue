@@ -19,6 +19,7 @@
             <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <j-tree-select dict="wm_equipment_type,type_name,id"
                              pidField="pid"
+                             :disabled="visible"
                              pidValue="0" @change="equipmentHandler"
                              hasChildField="has_child" v-decorator="[ 'equipmentType', validatorRules.equipmentType]"
                              placeholder="请输入设备类型"></j-tree-select>
@@ -36,7 +37,7 @@
           <!--          </a-col>-->
           <a-col :span="8">
             <a-form-item label="设备型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="[ 'equipmentCode', validatorRules.equipmentCode]" placeholder="请输入设备型号"></a-input>
+              <a-input :disabled="visible" v-decorator="[ 'equipmentModel', validatorRules.equipmentModel]" placeholder="请输入设备型号"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8">
@@ -53,13 +54,13 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="采购数量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number v-decorator="[ 'procurementNumber', validatorRules.procurementNumber]"
+              <a-input-number :disabled="visible" v-decorator="[ 'procurementNumber', validatorRules.procurementNumber]"
                               placeholder="请输入采购数量" style="width: 100%"/>
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="计量设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-dict-select-tag type="radio" v-decorator="['measureState', validatorRules.measureState]"
+              <j-dict-select-tag type="radio" v-decorator="['measureState', validatorRules.measureState,{'initialValue':1}]"
                                  :trigger-change="true" dictCode="yn" placeholder="请选择计量设备"/>
             </a-form-item>
           </a-col>
@@ -249,13 +250,13 @@ export default {
     return {
       //生产厂商
       originManufacturer: {
-        linkPersonPhone: '12313131',
-        linkPerson: 'test'
+        linkPersonPhone: '',
+        linkPerson: ''
       },
       //销售厂商
       saleManufacturer: {
-        linkPersonPhone: '222222',
-        linkPerson: 'test2'
+        linkPersonPhone: '',
+        linkPerson: ''
       },
       //合同信息
       contractInfo: {
@@ -291,12 +292,12 @@ export default {
             {required: true, message: '请输入设备名称!'},
           ]
         },
-        equipmentAliasName: {
-          rules: [
-            {required: true, message: '请输入设备别名!'},
-          ]
-        },
-        equipmentCode: {
+        // equipmentAliasName: {
+        //   rules: [
+        //     {required: true, message: '请输入设备别名!'},
+        //   ]
+        // },
+        equipmentModel: {
           rules: [
             {required: true, message: '请输入设备型号!'},
           ]
@@ -330,6 +331,9 @@ export default {
           ]
         },
         equipmentLogo: {
+          rules: []
+        },
+        equipmentCode: {
           rules: []
         },
         originManufacturerId: {
@@ -424,12 +428,13 @@ export default {
 
     /** 生产厂商获取联系人 */
     originManufacturerChange(value) {
+      // console.log("originManufacturerId ----> ", value)
       let _this = this;
-      getAction(this.url.getManufacturer,{id:value}).then(res=>{
-        if(res['success']){
+      getAction(this.url.getManufacturer, {id: value}).then(res => {
+        if (res['success']) {
           let records = res.result
           // console.log('records === ', records)
-          if(records){
+          if (records) {
             // console.log('getManufacturer', records)
             _this.originManufacturer = records
           }
@@ -438,12 +443,13 @@ export default {
     },
     /** 销售厂商获取联系人 */
     saleManufacturerChange(value) {
+      // console.log("saleManufacturerId ----> ", value)
       let _this = this;
-      getAction(this.url.getManufacturer,{id:value}).then(res=>{
-        if(res['success']){
+      getAction(this.url.getManufacturer, {id: value}).then(res => {
+        if (res['success']) {
           let records = res.result
           // console.log('records === ', records)
-          if(records){
+          if (records) {
             // console.log('getManufacturer', records)
             _this.saleManufacturer = records
           }
@@ -462,12 +468,16 @@ export default {
     },
     /** 调用完edit()方法之后会自动调用此方法 */
     editAfter() {
-      // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentCode', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode')
-      let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentCode', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode')
+      // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode')
+      let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode')
       this.$nextTick(() => {
         this.form.setFieldsValue(fieldval)
         this.$refs.wmInviteBidForm.initFormData(this.url.wmInviteBid.list, this.model.id)
         this.$refs.wmEquipmentApproveForm.initFormData(this.url.wmEquipmentApprove.list, this.model.id)
+        // console.log('this.model.originManufacturerId', this.model.originManufacturerId)
+        this.originManufacturerChange(this.model.originManufacturerId)
+        this.saleManufacturerChange(this.model.saleManufacturerId)
+        this.contractChange(this.model.contractCode)
       })
       // 加载子表数据
       if (this.model.id) {
@@ -488,7 +498,8 @@ export default {
       this.$message.error(msg)
     },
     popupCallback(row) {
-      this.form.setFieldsValue(pick(row, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentCode', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode'))
+      // 'equipmentAliasName',
+      this.form.setFieldsValue(pick(row, 'equipmentType', 'equipmentName','equipmentCode',  'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode'))
     },
 
   }

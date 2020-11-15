@@ -1,6 +1,8 @@
 package org.jeecg.modules.medical.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.jeecg.modules.medical.entity.WmEquipmentApprove;
 import org.jeecg.modules.medical.entity.WmEquipmentInfo;
@@ -9,7 +11,6 @@ import org.jeecg.modules.medical.mapper.WmEquipmentApproveMapper;
 import org.jeecg.modules.medical.mapper.WmEquipmentInfoMapper;
 import org.jeecg.modules.medical.mapper.WmInviteBidMapper;
 import org.jeecg.modules.medical.service.IWmEquipmentInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,8 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 	private WmInviteBidMapper wmInviteBidMapper;
 	@Resource
 	private WmEquipmentApproveMapper wmEquipmentApproveMapper;
+
+
 	
 	@Override
 	@Transactional
@@ -40,6 +43,7 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 		wmEquipmentInfoMapper.insert(wmEquipmentInfo);
 		if(CollectionUtil.isNotEmpty(wmInviteBidList)) {
 			for(WmInviteBid entity:wmInviteBidList) {
+				entity.setId(IdWorker.get32UUID());
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());
 				wmInviteBidMapper.insert(entity);
@@ -47,6 +51,7 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 		}
 		if(CollectionUtil.isNotEmpty(wmEquipmentApproveList)) {
 			for(WmEquipmentApprove entity:wmEquipmentApproveList) {
+				entity.setId(IdWorker.get32UUID());
 				//外键设置
 				entity.setWmEquipmentId(wmEquipmentInfo.getId());
 				wmEquipmentApproveMapper.insert(entity);
@@ -97,5 +102,14 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 			wmEquipmentInfoMapper.deleteById(id);
 		}
 	}
-	
+
+	@Override
+	public int getEquipmentTypeCount(String typeId) {
+		synchronized (this) {
+			QueryWrapper<WmEquipmentInfo> queryWrapper = new QueryWrapper<>();
+			queryWrapper.eq("equipment_type", typeId);
+			int count = wmEquipmentInfoMapper.selectCount(queryWrapper);
+		}
+		return 0;
+	}
 }

@@ -37,5 +37,11 @@ public interface IWmEquipmentInfoService extends IService<WmEquipmentInfo> {
 	 * 批量删除一对多
 	 */
 	public void delBatchMain (Collection<? extends Serializable> idList);
-	
+
+	/**
+	 * 设备类型id
+	 * @param typeId
+	 * @return 获取指定类型设备个数
+	 */
+	int getEquipmentTypeCount(String typeId);
 }

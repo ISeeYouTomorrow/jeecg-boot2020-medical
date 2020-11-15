@@ -1,10 +1,11 @@
 package org.jeecg.modules.medical.service;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
-import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.medical.entity.WmAreaSpace;
+import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,26 @@ public class MedicalQrCodeService {
     @Value(value="${jeecg.uploadType}")
     private String uploadType;
 
+    /**
+     * 二维码宽度
+     */
+    private static final Integer WIDTH = 200;
+    /**
+     * 二维码高度
+     */
+    private static final Integer HEIGHT = 200;
+
+    /**
+     * 二维码格式
+     */
     private final static String JPG = ".jpg";
+
+    /**
+     * 二维码图片路径
+     */
+    private static final String QRCODE_PATH = "qrcode";
+
+
     /**
      * 生成区域二维码
      * @param wmAreaSpace 区域信息
@@ -46,18 +66,60 @@ public class MedicalQrCodeService {
 
         String json = sb.toString();
         log.debug("MedicaQrCodeService.wmAreaQrCode {}",json);
-        String ctxPath = uploadpath;
         String fileName = null;
         String bizPath = File.separator+"qrcode"+File.separator+LocalDate.now().getYear()+File.separator;
-        File file = new File(ctxPath + bizPath );
+        File file = new File(uploadpath + bizPath );
         if (!file.exists()) {
             file.mkdirs();// 创建文件根目录
         }
         fileName = wmAreaSpace.getAreaCode() + "_"+ System.currentTimeMillis() ;
         String destPath = bizPath + fileName + JPG;
-        QrCodeUtil.generate(json, 200, 200, FileUtil.file(ctxPath+destPath));
+        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
         log.info("生成区域二维码图片路径: {}",destPath);
         return destPath;
+    }
+
+
+    /**
+     * 生成设备二维码
+     * @param equipmentInfo 设备信息
+     * @return String
+     */
+    public String equipmentQrCode(WmEquipmentInfo equipmentInfo) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("{");
+        sb.append("\"id\":\"").append(equipmentInfo.getId()).append("\",");
+        sb.append("\"areaCode\":\"").append(equipmentInfo.getEquipmentCode()).append("\",");
+        sb.append("\"areaName\":\"").append(equipmentInfo.getEquipmentName()).append("\"");
+        sb.append("}");
+
+        String json = sb.toString();
+        log.debug("MedicaQrCodeService.equipmentQrCode {}",json);
+        String fileName = null;
+
+        fileName = equipmentInfo.getEquipmentCode() + "_"+ System.currentTimeMillis() ;
+        String destPath = getBizPath() + fileName + JPG;
+        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
+        log.info("生成设备二维码图片路径: {}",destPath);
+        return destPath;
+    }
+
+    /**
+     * 获取biz path
+     * @return String
+     */
+    private String getBizPath() {
+        StringBuffer sb = new StringBuffer();
+        String today = DateUtil.today();
+        sb.append(File.separator).append(QRCODE_PATH)
+                .append(File.separator).append(today).append(File.separator);
+        String bizPath = sb.toString();
+        bizPath = bizPath.replaceAll("\\\\", "/");
+        File file = new File(uploadpath + bizPath );
+        if (!file.exists()) {
+            file.mkdirs();// 创建文件根目录
+        }
+        return bizPath;
     }
 
     /**
