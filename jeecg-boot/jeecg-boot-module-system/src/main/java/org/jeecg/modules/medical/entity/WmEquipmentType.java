@@ -20,6 +20,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 @Data
 @TableName("wm_equipment_type")
 public class WmEquipmentType implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
 	/**主键*/

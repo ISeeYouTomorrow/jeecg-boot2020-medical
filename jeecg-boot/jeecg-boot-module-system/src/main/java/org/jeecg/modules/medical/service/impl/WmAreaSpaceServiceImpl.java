@@ -36,6 +36,7 @@ public class WmAreaSpaceServiceImpl extends ServiceImpl<WmAreaSpaceMapper, WmAre
 				parent.setHasChild("1");
 				baseMapper.updateById(parent);
 			}
+			wmAreaSpace.setFullName(parent.getAreaName()+"-"+wmAreaSpace.getAreaName());
 		}
 		String file = qrCodeService.wmAreaQrCode(wmAreaSpace);
 		wmAreaSpace.setQrCodePath(file);
@@ -59,6 +60,8 @@ public class WmAreaSpaceServiceImpl extends ServiceImpl<WmAreaSpaceMapper, WmAre
 				baseMapper.updateTreeNodeStatus(wmAreaSpace.getPid(), IWmAreaSpaceService.HASCHILD);
 			}
 		}
+		WmAreaSpace parent = baseMapper.selectById(wmAreaSpace.getPid());
+		wmAreaSpace.setFullName(parent.getAreaName()+"-"+wmAreaSpace.getAreaName());
 		String file = qrCodeService.wmAreaQrCode(wmAreaSpace);
 		wmAreaSpace.setQrCodePath(file);
 		baseMapper.updateById(wmAreaSpace);

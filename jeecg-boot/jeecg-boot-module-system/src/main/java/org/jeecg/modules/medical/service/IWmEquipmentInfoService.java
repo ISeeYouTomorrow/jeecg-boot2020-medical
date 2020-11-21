@@ -4,6 +4,8 @@ import org.jeecg.modules.medical.entity.WmInviteBid;
 import org.jeecg.modules.medical.entity.WmEquipmentApprove;
 import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.medical.vo.WmEquipmentInfoPage;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -44,4 +46,18 @@ public interface IWmEquipmentInfoService extends IService<WmEquipmentInfo> {
 	 * @return 获取指定类型设备个数
 	 */
 	int getEquipmentTypeCount(String typeId);
+
+	/**
+	 * 批量添加多个设备方法： 根据设备个数区分
+	 * @param code
+	 * @param count
+	 * @param wmEquipmentInfoPage
+	 */
+    void saveBatchMain(String code, int count, WmEquipmentInfoPage wmEquipmentInfoPage);
+
+	/**
+	 * 设备领用信息
+	 * @param wmEquipmentInfo
+	 */
+	void updateUsed(WmEquipmentInfo wmEquipmentInfo);
 }

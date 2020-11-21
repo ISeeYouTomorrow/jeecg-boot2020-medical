@@ -1,46 +1,41 @@
 package org.jeecg.modules.medical.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.AutoLog;
+import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.medical.entity.WmEquipmentApprove;
+import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import org.jeecg.modules.medical.entity.WmEquipmentType;
+import org.jeecg.modules.medical.entity.WmInviteBid;
 import org.jeecg.modules.medical.service.*;
+import org.jeecg.modules.medical.util.MedicalUtils;
+import org.jeecg.modules.medical.vo.WmEquipmentInfoPage;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.jeecg.common.system.vo.LoginUser;
-import org.apache.shiro.SecurityUtils;
-import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.medical.entity.WmInviteBid;
-import org.jeecg.modules.medical.entity.WmEquipmentApprove;
-import org.jeecg.modules.medical.entity.WmEquipmentInfo;
-import org.jeecg.modules.medical.vo.WmEquipmentInfoPage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jeecg.common.aspect.annotation.AutoLog;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
  /**
  * @Description: 设备档案信息
@@ -64,7 +59,8 @@ public class WmEquipmentInfoController {
 	@Autowired
 	private MedicalQrCodeService qrCodeService;
 
-	private final Object object = new Object();
+	//添加操作对象锁
+	private static final Object object = new Object();
 
 	/**
 	 * 分页列表查询
@@ -83,7 +79,7 @@ public class WmEquipmentInfoController {
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<WmEquipmentInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmEquipmentInfo, req.getParameterMap());
-		Page<WmEquipmentInfo> page = new Page<WmEquipmentInfo>(pageNo, pageSize);
+		Page<WmEquipmentInfo> page = new Page<>(pageNo, pageSize);
 		IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
@@ -111,7 +107,7 @@ public class WmEquipmentInfoController {
 
 		//设备采购多个需要插入多条记录，且生成对应的编号和二维码
 		if (num == 1) {
-			String equipmentCode = code + "-" + String.format("%04d", ++count);
+			String equipmentCode = MedicalUtils.generateEquipmentCode(code, ++count);
 			WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
 			BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
 			wmEquipmentInfo.setEquipmentCode(equipmentCode);
@@ -120,17 +116,7 @@ public class WmEquipmentInfoController {
 			wmEquipmentInfo.setEquipmentQrcode(path);
 			wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
 		} else if (num > 1) {
-			for (int i = 0; i < num; i++) {
-				String equipmentCode = code + "-" + String.format("%04d", ++count);
-				WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
-				BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
-				wmEquipmentInfo.setId(IdWorker.get32UUID());
-				wmEquipmentInfo.setEquipmentCode(equipmentCode);
-				//生成设备二维码和设备编号
-				String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
-				wmEquipmentInfo.setEquipmentQrcode(path);
-				wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
-			}
+			wmEquipmentInfoService.saveBatchMain(code,count,wmEquipmentInfoPage);
 		}
 
 		return Result.ok("添加成功！");
@@ -152,10 +138,40 @@ public class WmEquipmentInfoController {
 		if(wmEquipmentInfoEntity==null) {
 			return Result.error("未找到对应数据");
 		}
+		Date date = Calendar.getInstance().getTime();
+		wmEquipmentInfo.setUpdateTime(date);
+		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+		wmEquipmentInfo.setUpdateBy(sysUser.getUsername());
+		wmEquipmentInfo.setStartUseTime(date);
 		wmEquipmentInfoService.updateMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
 		return Result.ok("编辑成功!");
 	}
-	
+
+	 /**
+	  *  编辑设备领用信息
+	  *
+	  * @param wmEquipmentInfoPage
+	  * @return
+	  */
+	 @AutoLog(value = "设备档案信息-编辑")
+	 @ApiOperation(value="设备档案信息-编辑", notes="设备档案信息-编辑")
+	 @PutMapping(value = "/editUsed")
+	 public Result<?> editUsed(@RequestBody WmEquipmentInfoPage wmEquipmentInfoPage) {
+		 WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
+		 BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
+		 WmEquipmentInfo wmEquipmentInfoEntity = wmEquipmentInfoService.getById(wmEquipmentInfo.getId());
+		 if(wmEquipmentInfoEntity==null) {
+			 return Result.error("未找到对应数据");
+		 }
+		 Date date = Calendar.getInstance().getTime();
+		 wmEquipmentInfo.setUpdateTime(date);
+		 LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+		 wmEquipmentInfo.setStartUseTime(date);
+		 wmEquipmentInfo.setUpdateBy(sysUser.getUsername());
+		 wmEquipmentInfoService.updateUsed(wmEquipmentInfo);
+		 return Result.ok("编辑成功!");
+	 }
+
 	/**
 	 *   通过id删除
 	 *

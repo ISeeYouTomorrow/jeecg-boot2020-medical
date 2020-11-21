@@ -125,7 +125,7 @@ public class WmEquipmentInfo implements Serializable {
     private java.lang.String chargePerson;
 	/**安放位置*/
 	@Excel(name = "安放位置", width = 15,dictTable = "wm_area_space", dicText = "id,pid,area_name,has_child", dicCode = "0")
-    @Dict(dictTable = "wm_area_space", dicText = "id,pid,area_name,has_child", dicCode = "0")
+    @Dict(dictTable = "wm_area_space", dicText = "id,pid,area_name,has_child", dicCode = "0",pageDictCode = "id", pageDictText = "area_name")
     @ApiModelProperty(value = "安放位置")
     private java.lang.String chargeArea;
 	/**启用时间*/

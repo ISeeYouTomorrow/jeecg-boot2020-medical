@@ -101,8 +101,17 @@ public class DictAspect {
                             String code = field.getAnnotation(Dict.class).dicCode();
                             String text = field.getAnnotation(Dict.class).dicText();
                             String table = field.getAnnotation(Dict.class).dictTable();
-                            String key = String.valueOf(item.get(field.getName()));
 
+                            /****解决列表自定义树组件显示问题****/
+                            String pageCode = field.getAnnotation(Dict.class).pageDictCode();
+                            String pageText = field.getAnnotation(Dict.class).pageDictText();
+                            if (!StringUtils.isEmpty(pageCode) && !StringUtils.isEmpty(pageText)) {
+                                code = pageCode;
+                                text = pageText;
+                            }
+
+                            String key = String.valueOf(item.get(field.getName()));
+                            log.debug("code ={},text={},key={}",code,text,key);
                             //翻译字典值对应的txt
                             String textValue = translateDictValue(code, text, table, key);
 

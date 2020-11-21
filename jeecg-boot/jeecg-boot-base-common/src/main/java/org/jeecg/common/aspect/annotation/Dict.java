@@ -39,4 +39,21 @@ public @interface Dict {
      * @return 返回类型： String
      */
     String dictTable() default "";
+
+
+    /**
+     * 解决自定义树列表展示问题
+     * 对应列表显示的数据库字段
+     * @return
+     */
+    String pageDictText() default "";
+
+    /**
+     * 解决自定义树列表展示问题
+     * 对应列表显示查询条件字段
+     * id
+     * @return
+     */
+    String pageDictCode() default "";
+
 }

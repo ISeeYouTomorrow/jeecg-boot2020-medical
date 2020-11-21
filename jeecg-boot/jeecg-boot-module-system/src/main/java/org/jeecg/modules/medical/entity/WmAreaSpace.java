@@ -69,4 +69,7 @@ public class WmAreaSpace implements Serializable {
 
 	/**二维码保存路径 */
 	private java.lang.String qrCodePath;
+
+	/**全路径名称 */
+	private java.lang.String fullName;
 }
