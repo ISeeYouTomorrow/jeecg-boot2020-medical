@@ -195,9 +195,18 @@ export const JeecgListMixin = {
       this.$refs.modalForm.title = "编辑";
       this.$refs.modalForm.disableSubmit = false;
     },
-    handleAdd: function () {
+    /**
+     * 自定义表单title
+     * @param title
+     */
+    handleAdd: function (title) {
       this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "新增";
+      if (title) {
+        this.$refs.modalForm.title = title;
+      }else {
+        this.$refs.modalForm.title = "新增";
+      }
+
       this.$refs.modalForm.disableSubmit = false;
     },
     handleTableChange(pagination, filters, sorter) {
