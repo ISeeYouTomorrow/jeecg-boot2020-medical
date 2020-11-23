@@ -17,6 +17,7 @@ import org.jeecg.modules.medical.entity.WmEquipmentInfo;
 import org.jeecg.modules.medical.entity.WmEquipmentType;
 import org.jeecg.modules.medical.entity.WmInviteBid;
 import org.jeecg.modules.medical.service.*;
+import org.jeecg.modules.medical.util.EquipmentStatusEnum;
 import org.jeecg.modules.medical.util.MedicalUtils;
 import org.jeecg.modules.medical.vo.WmEquipmentInfoPage;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -26,6 +27,7 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -39,7 +41,7 @@ import java.util.stream.Collectors;
 
  /**
  * @Description: 设备档案信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-10
  * @Version: V1.0
  */
@@ -61,6 +63,55 @@ public class WmEquipmentInfoController {
 
 	//添加操作对象锁
 	private static final Object object = new Object();
+
+
+
+
+	 /**
+	  * 分页列表查询未使用的设备
+	  *
+	  * @param wmEquipmentInfo
+	  * @param pageNo
+	  * @param pageSize
+	  * @param req
+	  * @return
+	  */
+	 @AutoLog(value = "设备档案信息-分页列表查询")
+	 @ApiOperation(value="设备档案信息-分页列表查询", notes="设备档案信息-分页列表查询")
+	 @GetMapping(value = "/listNoUse")
+	 public Result<?> listNoUse(WmEquipmentInfo wmEquipmentInfo,
+									@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+									HttpServletRequest req) {
+		 QueryWrapper<WmEquipmentInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmEquipmentInfo, req.getParameterMap());
+		 queryWrapper.eq("equipment_status", "0");
+		 Page<WmEquipmentInfo> page = new Page<>(pageNo, pageSize);
+		 IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
+		 return Result.ok(pageList);
+	 }
+
+	 /**
+	  * 分页列表查询使用的设备
+	  *
+	  * @param wmEquipmentInfo
+	  * @param pageNo
+	  * @param pageSize
+	  * @param req
+	  * @return
+	  */
+	 @AutoLog(value = "已使用设备档案信息-分页列表查询")
+	 @ApiOperation(value="设备档案信息-分页列表查询", notes="设备档案信息-分页列表查询")
+	 @GetMapping(value = "/listUsed")
+	 public Result<?> listUsed(WmEquipmentInfo wmEquipmentInfo,
+								@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+								@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+								HttpServletRequest req) {
+		 QueryWrapper<WmEquipmentInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmEquipmentInfo, req.getParameterMap());
+		 queryWrapper.eq("equipment_status", "1");
+		 Page<WmEquipmentInfo> page = new Page<>(pageNo, pageSize);
+		 IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
+		 return Result.ok(pageList);
+	 }
 
 	/**
 	 * 分页列表查询
@@ -98,6 +149,9 @@ public class WmEquipmentInfoController {
 		WmEquipmentType equipmentType = wmEquipmentTypeService.getById(typeId);
 		String code = equipmentType.getTypeAlias18();
 
+		if (StringUtils.isEmpty(wmEquipmentInfoPage.getChargePerson())) {
+			wmEquipmentInfoPage.setEquipmentStatus(EquipmentStatusEnum.STATUS_ENUM0.getCode());
+		}
 		int count = 0;
 		synchronized (object) {
 			count = wmEquipmentInfoService.getEquipmentTypeCount(typeId);
@@ -133,6 +187,9 @@ public class WmEquipmentInfoController {
 	@PutMapping(value = "/edit")
 	public Result<?> edit(@RequestBody WmEquipmentInfoPage wmEquipmentInfoPage) {
 		WmEquipmentInfo wmEquipmentInfo = new WmEquipmentInfo();
+		if (StringUtils.isEmpty(wmEquipmentInfoPage.getChargePerson())) {
+			wmEquipmentInfoPage.setEquipmentStatus(EquipmentStatusEnum.STATUS_ENUM0.getCode());
+		}
 		BeanUtils.copyProperties(wmEquipmentInfoPage, wmEquipmentInfo);
 		WmEquipmentInfo wmEquipmentInfoEntity = wmEquipmentInfoService.getById(wmEquipmentInfo.getId());
 		if(wmEquipmentInfoEntity==null) {

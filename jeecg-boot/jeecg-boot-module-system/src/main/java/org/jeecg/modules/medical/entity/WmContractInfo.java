@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 
 /**
  * @Description: 厂商合同信息管理
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-09
  * @Version: V1.0
  */

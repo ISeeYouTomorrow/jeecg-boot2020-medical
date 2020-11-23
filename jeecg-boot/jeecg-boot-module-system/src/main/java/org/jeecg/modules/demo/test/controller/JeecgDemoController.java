@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Description: 单表示例
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:2018-12-29
  * @Version:V2.0
  */

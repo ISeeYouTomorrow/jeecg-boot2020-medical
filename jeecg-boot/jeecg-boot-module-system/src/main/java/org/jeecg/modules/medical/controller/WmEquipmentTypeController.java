@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @Description: 设备数据
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-07
  * @Version: V1.0
  */

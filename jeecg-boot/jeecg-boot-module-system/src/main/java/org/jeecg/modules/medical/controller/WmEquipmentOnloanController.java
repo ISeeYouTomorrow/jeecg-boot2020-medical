@@ -24,7 +24,7 @@ import java.util.Date;
 
 /**
  * @Description: 设备借用信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date: 2020-11-22
  * @Version: V1.0
  */
@@ -84,7 +84,7 @@ public class WmEquipmentOnloanController extends JeecgController<WmEquipmentOnlo
     @ApiOperation(value = "设备借用信息-添加", notes = "设备借用信息-添加")
     @PostMapping(value = "/add")
     public Result<?> add(@RequestBody WmEquipmentOnloan wmEquipmentOnloan) {
-        wmEquipmentOnloanService.save(wmEquipmentOnloan);
+        wmEquipmentOnloanService.saveAndUpdateEquipment(wmEquipmentOnloan);
         return Result.ok("添加成功！");
     }
 

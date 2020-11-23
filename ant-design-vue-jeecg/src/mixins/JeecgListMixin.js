@@ -200,11 +200,11 @@ export const JeecgListMixin = {
      * @param title
      */
     handleAdd: function (title) {
+      // console.log('title -----> ', title)
       this.$refs.modalForm.add();
-      if (title) {
+      this.$refs.modalForm.title = "新增";
+      if (title instanceof String) {
         this.$refs.modalForm.title = title;
-      }else {
-        this.$refs.modalForm.title = "新增";
       }
 
       this.$refs.modalForm.disableSubmit = false;

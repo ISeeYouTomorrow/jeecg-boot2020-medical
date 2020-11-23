@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * @Description: 部门角色权限
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-02-12
  * @Version: V1.0
  */

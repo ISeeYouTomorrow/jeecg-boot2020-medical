@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  /**
  * @Title: Controller
  * @Description: 用户通告阅读标记表
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:  2019-02-21
  * @Version: V1.0
  */

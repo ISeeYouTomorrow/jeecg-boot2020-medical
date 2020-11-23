@@ -83,7 +83,14 @@
             下载
           </a-button>
         </template>
-
+        <template slot-scope="text" slot="statusSlots">
+          <span v-if="text == 0" style="color: #f5222d">空置</span>
+          <span v-if="text == 1" style="color: #00C1B3">使用中</span>
+          <span v-if="text == 2" style="color: #f5222d">已借用</span>
+          <span v-if="text == 3" style="color: #00C1B3">维修中</span>
+          <span v-if="text == 4" style="color: #f5222d">保养中</span>
+          <span v-if="text == 5" style="color: #00C1B3">计量中</span>
+        </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
 
@@ -237,6 +244,12 @@
             title:'合同编号',
             align:"center",
             dataIndex: 'contractCode_dictText'
+          },
+          {
+            title:'设备状态',
+            align:"center",
+            dataIndex: 'equipmentStatus',
+            scopedSlots: { customRender: 'statusSlots' }
           },
           {
             title: '操作',

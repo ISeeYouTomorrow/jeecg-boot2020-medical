@@ -19,7 +19,7 @@
             <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <j-tree-select dict="wm_equipment_type,type_name,id"
                              pidField="pid"
-                             :disabled="visible"
+                             :disabled="!isAdd"
                              pidValue="0" @change="equipmentHandler"
                              hasChildField="has_child" v-decorator="[ 'equipmentType', validatorRules.equipmentType]"
                              placeholder="请输入设备类型"></j-tree-select>
@@ -248,6 +248,7 @@ export default {
   },
   data() {
     return {
+      isAdd: true,
       //生产厂商
       originManufacturer: {
         linkPersonPhone: '',
@@ -481,7 +482,13 @@ export default {
       })
       // 加载子表数据
       if (this.model.id) {
-        let params = {id: this.model.id}
+        this.isAdd = false
+        // let params = {id: this.model.id}
+      }else {
+        this.isAdd = true
+        this.originManufacturer = {}
+        this.saleManufacturer = {}
+        this.contractInfo = {}
       }
     },
     /** 整理成formData */

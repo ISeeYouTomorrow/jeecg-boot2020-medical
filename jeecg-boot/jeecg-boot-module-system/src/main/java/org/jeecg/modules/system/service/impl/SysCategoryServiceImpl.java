@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * @Description: 分类字典
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2019-05-29
  * @Version: V1.0
  */

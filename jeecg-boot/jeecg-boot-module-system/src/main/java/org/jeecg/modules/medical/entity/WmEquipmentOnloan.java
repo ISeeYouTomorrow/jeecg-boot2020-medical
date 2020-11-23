@@ -18,7 +18,7 @@ import java.util.Date;
 
 /**
  * @Description: 设备借用信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-22
  * @Version: V1.0
  */

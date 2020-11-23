@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Description: 设备档案信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-10
  * @Version: V1.0
  */
@@ -135,7 +135,12 @@ public class WmEquipmentInfoPage {
 	@Excel(name = "合同编号", width = 15)
 	@ApiModelProperty(value = "合同编号")
 	private java.lang.String contractCode;
-	
+
+	/** 设备状态 0=默认(闲置) 1=已使用 2=已借用 3=维修 4=保养  5=计量 6=已报废*/
+	@Excel(name = "设备状态", width = 15)
+	@ApiModelProperty(value = "合同编号")
+	private String equipmentStatus;
+
 	@ExcelCollection(name="设备招标信息")
 	@ApiModelProperty(value = "设备招标信息")
 	private List<WmInviteBid> wmInviteBidList;

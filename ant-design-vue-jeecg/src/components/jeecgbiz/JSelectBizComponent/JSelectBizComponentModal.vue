@@ -88,7 +88,7 @@
       },
       width: {
         type: Number,
-        default: 900
+        default: 1000
       },
 
       name: {

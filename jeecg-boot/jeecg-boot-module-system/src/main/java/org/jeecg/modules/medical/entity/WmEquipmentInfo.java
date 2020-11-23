@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Description: 设备档案信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-10
  * @Version: V1.0
  */
@@ -129,9 +129,9 @@ public class WmEquipmentInfo implements Serializable {
     @ApiModelProperty(value = "安放位置")
     private java.lang.String chargeArea;
 	/**启用时间*/
-	@Excel(name = "启用时间", width = 15, format = "yyyy-MM-dd")
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+	@Excel(name = "启用时间", width = 15, format = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "启用时间")
     private java.util.Date startUseTime;
 	/**保养周期(天)*/
@@ -147,4 +147,8 @@ public class WmEquipmentInfo implements Serializable {
     @Dict(dictTable = "wm_contract_info", dicText = "contract_name", dicCode = "id")
     @ApiModelProperty(value = "合同编号")
     private java.lang.String contractCode;
+	/** 设备状态 0=默认(闲置) 1=已使用 2=已借用 3=维修 4=保养  5=计量*/
+    @Excel(name = "设备状态", width = 15)
+    @ApiModelProperty(value = "合同编号")
+	private String equipmentStatus;
 }

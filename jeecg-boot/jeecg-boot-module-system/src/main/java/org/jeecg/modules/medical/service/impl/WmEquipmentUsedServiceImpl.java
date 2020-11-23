@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * @Description: 科室领用
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-20
  * @Version: V1.0
  */

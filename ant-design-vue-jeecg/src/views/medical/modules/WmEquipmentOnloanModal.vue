@@ -125,7 +125,7 @@
             name: '公共设备选择',
             displayKey: 'equipmentName',
             returnKeys: ['id', 'equipmentName','equipmentModel','equipmentCode'],//返回出去的数据，通常是id
-            listUrl: '/medical/wmEquipmentInfo/list',//查询数据的接口
+            listUrl: '/medical/wmEquipmentInfo/listNoUse',//查询数据的接口
             queryParamCode: 'equipmentName',//搜索定义，通过name实体类字段搜索记录
             queryParamText: '设备名称',//相当于label
             columns: [//返回的记录根据此处配置显示出来，此处显示俩个字段
@@ -190,7 +190,7 @@
        * @param rows
        */
       changeEquipment(rows) {
-        console.log('select data -------> ', rows)
+        // console.log('select data -------> ', rows)
         if (rows && rows.length > 0) {
           this.equipmentRow = rows[0]
           this.form.setFieldsValue({'equipmentId': this.equipmentRow.id})

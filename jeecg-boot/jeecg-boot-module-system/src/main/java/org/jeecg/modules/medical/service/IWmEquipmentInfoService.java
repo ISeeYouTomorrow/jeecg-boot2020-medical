@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @Description: 设备档案信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-10
  * @Version: V1.0
  */

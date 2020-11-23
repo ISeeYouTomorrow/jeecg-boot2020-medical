@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * @Description: 设备数据
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-07
  * @Version: V1.0
  */

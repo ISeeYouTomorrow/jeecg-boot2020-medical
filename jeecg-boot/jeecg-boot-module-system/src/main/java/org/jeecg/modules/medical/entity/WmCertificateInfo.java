@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 
 /**
  * @Description: 厂商证书管理
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-09
  * @Version: V1.0
  */

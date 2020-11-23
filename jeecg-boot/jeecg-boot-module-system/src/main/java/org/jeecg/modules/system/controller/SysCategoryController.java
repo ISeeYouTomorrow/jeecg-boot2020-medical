@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 
  /**
  * @Description: 分类字典
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2019-05-29
  * @Version: V1.0
  */

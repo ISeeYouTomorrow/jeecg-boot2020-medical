@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @Description: 设备招标信息
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-10
  * @Version: V1.0
  */

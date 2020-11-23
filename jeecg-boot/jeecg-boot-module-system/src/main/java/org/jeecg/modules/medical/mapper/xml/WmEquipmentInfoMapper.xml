@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.medical.mapper.WmEquipmentInfoMapper">
 
+    <!-- 转科信息更新 -->
+    <update id="updateByTransfer" parameterType="org.jeecg.modules.medical.entity.WmEquipmentInfo">
+        update wm_equipment_info
+        set update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        charge_person = #{chargePerson,jdbcType=VARCHAR},
+        charge_area = #{chargeArea,jdbcType=TIMESTAMP},
+        use_dept = #{useDept, jdbcType=VARCHAR},
+        start_use_time = #{startUseTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Description: 定时任务在线管理
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date: 2019-01-02
  * @Version:V1.0
  */

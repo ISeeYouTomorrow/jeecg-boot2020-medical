@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * @Description: jeecg 测试demo
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:  2018-12-29
  * @Version: V1.0
  */

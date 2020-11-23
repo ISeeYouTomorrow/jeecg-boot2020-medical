@@ -13,7 +13,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 
 /**
  * @Description: 设备数据
- * @Author: jeecg-boot
+ * @Author: lxl
  * @Date:   2020-11-07
  * @Version: V1.0
  */
