@@ -13,37 +13,31 @@
           <a-form-item label="转科设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input v-decorator="['equipmentId', validatorRules.equipmentId]"  style="width: 100%;"/>
           </a-form-item>
-          <a-form-item label="原科室ID" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input disabled v-decorator="['oldDept', validatorRules.oldDept]"  style="width: 100%;"/>
-          </a-form-item>
-          <a-form-item label="原使用人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input disabled v-decorator="['oldPerson', validatorRules.oldPerson]"  style="width: 100%;"/>
-          </a-form-item>
-          <a-form-item label="原启用位置" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input  disabled v-decorator="['oldArea', validatorRules.oldArea]"  style="width: 100%;"/>
-          </a-form-item>
           <a-form-item label="原启用时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input disabled v-decorator="['oldStartTime', validatorRules.oldStartTime]"></a-input>
           </a-form-item>
         </a-col>
         <a-form-item label="转科设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <j-select-biz-component @select="changeEquipment" v-bind="equipmentConfigs" :multiple="selectEquipment.multiple" :display-key="selectEquipment.displayKey"/>
+            <j-select-biz-component @select="changeEquipment" v-bind="equipmentConfigs" value="" :multiple="selectEquipment.multiple" :display-key="selectEquipment.displayKey"/>
+        </a-form-item>
+        <a-form-item label="资产编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input disabled v-model="equipmentRow.equipmentCode"></a-input>
         </a-form-item>
         <a-form-item label="原科室" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input disabled v-model="equipmentRow.useDept_dictText"></a-input>
+          <a-input disabled v-decorator="['oldDept', validatorRules.oldDept]"></a-input>
         </a-form-item>
         <a-form-item label="原使用人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input disabled v-model="equipmentRow.chargePerson_dictText"></a-input>
+          <a-input disabled v-decorator="['oldPerson', validatorRules.oldPerson]"></a-input>
         </a-form-item>
         <a-form-item label="原位置" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input disabled v-model="equipmentRow.chargeArea_dictText"></a-input>
+          <a-input disabled v-decorator="['oldArea', validatorRules.oldArea]"></a-input>
         </a-form-item>
 
         <a-form-item label="转入科室" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-select-depart v-decorator="['transferDept', validatorRules.transferDept]" :trigger-change="true"/>
         </a-form-item>
         <a-form-item label="接收人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-select-user-by-dep v-decorator="['transferPerson', validatorRules.transferPerson]" :trigger-change="true"/>
+          <j-select-user-by-dep v-decorator="['transferPerson', validatorRules.transferPerson]" :trigger-change="true" :multi="selectMulti"/>
         </a-form-item>
         <a-form-item label="接收位置" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-tree-select dict="wm_area_space,area_name,id"
@@ -85,6 +79,7 @@
     },
     data () {
       return {
+        selectMulti: false,
         equipmentEditable: true,
         /**
          * 选择的设备信息
@@ -135,21 +130,21 @@
         confirmLoading: false,
         validatorRules: {
           equipmentId: {rules: [
-            {required: true, message: '请输入设备id!'},
+            {required: true, message: '请选择设备!'},
           ]},
           oldDept: {rules: [
-            {required: true, message: ''},
+            {required: true, message: '请选择设备!'},
           ]},
           oldPerson: {rules: [
-            {required: true, message: ''},
+            {required: true, message: '请选择设备'},
           ]},
           oldArea: {rules: [
-              {required: true, message: ''},
+              {required: true, message: '请选择设备'},
             ]},
           oldStartTime: {
-            rules: [
-              {required: true, message: ''},
-            ]
+            // rules: [
+            //   {required: true, message: ''},
+            // ]
           },
           transferDept: {rules: [
             {required: true, message: '请输入转入科室!'},
@@ -188,14 +183,17 @@
         // console.log('select data -------> ', rows)
         if (rows && rows.length > 0) {
           this.equipmentRow = rows[0]
-          this.form.setFieldsValue({'equipmentId': this.equipmentRow.id})
-          this.form.setFieldsValue({'oldDept': this.equipmentRow.useDept})
-          this.form.setFieldsValue({'oldPerson': this.equipmentRow.chargePerson})
-          this.form.setFieldsValue({'oldArea': this.equipmentRow.chargeArea})
-          this.form.setFieldsValue({'oldStartTime': this.equipmentRow.startUseTime})
+        }else{
+          this.equipmentRow = {}
         }
+        this.form.setFieldsValue({'equipmentId': this.equipmentRow.id})
+        this.form.setFieldsValue({'oldDept': this.equipmentRow.useDept_dictText})
+        this.form.setFieldsValue({'oldPerson': this.equipmentRow.chargePerson_dictText})
+        this.form.setFieldsValue({'oldArea': this.equipmentRow.chargeArea_dictText})
+        this.form.setFieldsValue({'oldStartTime': this.equipmentRow.startUseTime})
       },
       add () {
+        // this.equipmentRow = {}
         this.edit({});
       },
       edit (record) {
@@ -204,11 +202,14 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'equipmentId','oldDept','oldPerson','oldStartTime','oldArea','transferDept','transferPerson','transferArea','transferFile','remark'))
+          //添加选择
+          if (!(this.model.id)) {
+            // console.log('this.equipmentRow ----> ',this.equipmentRow)
+            if (Object.keys(this.equipmentRow).length > 0) {
+              this.changeEquipment([this.equipmentRow])
+            }
+          }
         })
-        if (!this.model.id) {
-          this.equipmentRow = {}
-          this.selectEquipment.value = ''
-        }
       },
       close () {
         this.$emit('close');
@@ -231,6 +232,10 @@
             }
             //todo .. 校验转科信息
             let formData = Object.assign(this.model, values);
+
+            formData["oldDept"] = this.equipmentRow.useDept
+            formData["oldPerson"] = this.equipmentRow.chargePerson
+            formData["oldArea"] = this.equipmentRow.chargeArea
             console.log("表单提交数据",formData)
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
