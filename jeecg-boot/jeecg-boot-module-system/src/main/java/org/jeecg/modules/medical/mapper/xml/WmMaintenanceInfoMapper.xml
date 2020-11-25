@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.medical.mapper.WmMaintenanceInfoMapper">
+
+    <resultMap id="wmEquipmentTransferPageMap" type="org.jeecg.modules.medical.vo.WmMaintenancePageVO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="sys_org_code" property="sysOrgCode" jdbcType="VARCHAR"/>
+        <result column="equipment_id" property="equipmentId" jdbcType="VARCHAR"/>
+        <result column="apply_dept" property="applyDept" jdbcType="VARCHAR"/>
+        <result column="apply_person" property="applyPerson" jdbcType="VARCHAR"/>
+        <result column="problem_type" property="problemType" jdbcType="VARCHAR"/>
+        <result column="problem_remark" property="problemRemark" jdbcType="VARCHAR"/>
+        <result column="problem_pictures" property="problemPictures" jdbcType="VARCHAR"/>
+        <result column="maintenance_status" property="maintenanceStatus" jdbcType="VARCHAR"/>
+        <result column="maintenance_producer" property="maintenanceProducer" jdbcType="VARCHAR"/>
+        <result column="maintenance_person" property="maintenancePerson" jdbcType="VARCHAR"/>
+        <result column="maintenance_date" property="maintenanceDate" jdbcType="TIMESTAMP"/>
+        <result column="maintenance_fee" property="maintenanceFee" jdbcType="DECIMAL"/>
+        <result column="maintenance_remark" property="maintenanceRemark" jdbcType="VARCHAR"/>
+        <result column="maintenance_result" property="maintenanceResult" jdbcType="TIMESTAMP"/>
+        <result column="equipment_name" property="equipmentName" jdbcType="VARCHAR"/>
+        <result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR"/>
+        <result column="equipment_model" property="equipmentModel" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 查询报修信息 -->
+    <select id="selectForPage" resultMap="wmEquipmentTransferPageMap">
+        SELECT
+        a.id,
+        a.create_by,
+        a.create_time,
+        a.update_by,
+        a.update_time,
+        a.sys_org_code,
+        a.equipment_id,
+        a.apply_dept,
+        a.apply_person,
+        a.problem_type,
+        a.problem_remark,
+        a.problem_pictures,
+        a.maintenance_status,
+        a.maintenance_producer,
+        a.maintenance_person,
+        a.maintenance_date,
+        a.maintenance_fee,
+        a.maintenance_remark,
+        a.maintenance_result,
+        b.equipment_code,
+        b.equipment_model,
+        b.equipment_name
+        FROM
+        wm_maintenance_info a,
+        wm_equipment_info b
+        WHERE a.equipment_id = b.id
+        <if test="equipmentName != null and equipmentName !=''">
+            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
+        </if>
+        <if test="equipmentCode != null and equipmentCode !=''">
+            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+        </if>
+        order by a.create_time desc
+    </select>
+</mapper>

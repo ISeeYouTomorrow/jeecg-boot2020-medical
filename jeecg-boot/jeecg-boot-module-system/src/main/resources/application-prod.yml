@@ -3,7 +3,7 @@ server:
   tomcat:
     max-swallow-size: -1
   servlet:
-    context-path: /jeecg-boot
+    context-path: /wisdom-medical
   compression:
     enabled: true
     min-response-size: 1024

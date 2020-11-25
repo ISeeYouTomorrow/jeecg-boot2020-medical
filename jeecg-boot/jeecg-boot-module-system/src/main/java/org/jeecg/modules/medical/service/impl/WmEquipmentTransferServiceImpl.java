@@ -54,7 +54,10 @@ public class WmEquipmentTransferServiceImpl extends ServiceImpl<WmEquipmentTrans
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         Date date = new Date();
         info.setUpdateTime(date);
-        info.setStartUseTime(date);
+//        if (wmEquipmentTransfer.getOldStartTime() == null) {
+//            info.setStartUseTime(date);
+//        }
+
         info.setChargeArea(wmEquipmentTransfer.getTransferArea());
         info.setChargePerson(wmEquipmentTransfer.getTransferPerson());
         info.setUseDept(wmEquipmentTransfer.getTransferDept());
