@@ -1,14 +1,14 @@
 <template>
   <a-upload
     name="file"
-    :multiple="true"
+    :multiple="multiple"
     :action="uploadAction"
     :headers="headers"
     :data="{'biz':bizPath}"
     :fileList="fileList"
     :beforeUpload="beforeUpload"
     @change="handleChange"
-    :disabled="disabled"
+    :disabled="!multiple && fileList.length==1"
     :returnUrl="returnUrl">
     <a-button>
       <a-icon type="upload" />{{ text }}
@@ -47,6 +47,11 @@
       }
     },
     props:{
+      multiple: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
       text:{
         type:String,
         required:false,

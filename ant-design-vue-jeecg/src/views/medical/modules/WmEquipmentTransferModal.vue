@@ -47,7 +47,7 @@
                          placeholder="请输入安放位置"></j-tree-select>
         </a-form-item>
         <a-form-item label="转科附件" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-upload v-decorator="['transferFile', validatorRules.transferFile]" :trigger-change="true"></j-upload>
+          <j-upload :multiple="multiple" :biz-path="bizPath" v-decorator="['transferFile', validatorRules.transferFile]" :trigger-change="true"></j-upload>
         </a-form-item>
         <a-form-item label="转科备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['remark', validatorRules.remark]" rows="4" placeholder="请输入转科备注"/>
@@ -79,6 +79,7 @@
     },
     data () {
       return {
+        multiple: false,
         selectMulti: false,
         equipmentEditable: true,
         /**
@@ -170,6 +171,21 @@
     created () {
     },
     computed:{
+      /**
+       * 文件路径
+       */
+      bizPath() {
+        let date = new Date()
+        let year = date.getFullYear()
+        let mon = date.getMonth()+1
+        mon = mon<10?"0"+mon:mon
+        let day = date.getDate()
+        day = day<10?"0"+day:day
+        let temp = year+"-"+mon+"-"+day
+        let bizPath = "transfer/"+temp+"/"
+        // console.log('bizPath -------> ', bizPath)
+        return bizPath
+      },
       equipmentConfigs() {
         return Object.assign({ value: this.selectEquipment.value }, this.selectEquipment.settings, this.$attrs)
       }
