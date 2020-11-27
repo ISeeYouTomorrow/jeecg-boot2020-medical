@@ -22,8 +22,25 @@ public class WmMaintenanceInfoServiceImpl extends ServiceImpl<WmMaintenanceInfoM
 
     @Resource
     private WmMaintenanceInfoMapper wmMaintenanceInfoMapper;
+
+    /**
+     * 分页查询
+     * @param page 分页
+     * @param equipmentName 设备名
+     * @param equipmentCode 设备编号
+     * @return
+     */
     @Override
     public Page<WmMaintenancePageVO> queryForPage(Page<WmMaintenancePageVO> page, String equipmentName, String equipmentCode) {
         return page.setRecords(wmMaintenanceInfoMapper.selectForPage(page, equipmentName, equipmentCode));
+    }
+
+    /**
+     * 保存派工信息
+     * @param wmMaintenanceInfo
+     */
+    @Override
+    public void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo) {
+        wmMaintenanceInfoMapper.saveWorkMaintenance(wmMaintenanceInfo);
     }
 }

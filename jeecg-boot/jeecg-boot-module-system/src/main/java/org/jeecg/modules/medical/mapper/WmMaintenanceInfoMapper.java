@@ -26,4 +26,9 @@ public interface WmMaintenanceInfoMapper extends BaseMapper<WmMaintenanceInfo> {
      */
     List<WmMaintenancePageVO> selectForPage(Page<WmMaintenancePageVO> page, @Param("equipmentName") String equipmentName, @Param("equipmentCode")String equipmentCode);
 
+    /**
+     * 派工信息保存
+     * @param wmMaintenanceInfo
+     */
+    void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
 }

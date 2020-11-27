@@ -190,9 +190,14 @@ export const JeecgListMixin = {
         }
       });
     },
-    handleEdit: function (record) {
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "编辑";
+    handleEdit: function (record,title) {
+      this.$refs.modalForm.edit(record)
+      if (title) {
+        this.$refs.modalForm.title = title
+      }else {
+        this.$refs.modalForm.title = "编辑";
+      }
+
       this.$refs.modalForm.disableSubmit = false;
     },
     /**

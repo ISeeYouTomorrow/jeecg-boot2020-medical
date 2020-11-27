@@ -32,7 +32,7 @@ import java.util.Arrays;
 public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceInfo, IWmMaintenanceInfoService> {
 	@Resource
 	private IWmMaintenanceInfoService wmMaintenanceInfoService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -56,7 +56,7 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 		IPage<WmMaintenancePageVO> pageList = wmMaintenanceInfoService.queryForPage(page, equipmentName,equipmentCode);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -70,7 +70,7 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 		wmMaintenanceInfoService.save(wmMaintenanceInfo);
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -84,7 +84,20 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 		wmMaintenanceInfoService.updateById(wmMaintenanceInfo);
 		return Result.ok("编辑成功!");
 	}
-	
+	/**
+	 *  维修派工信息保存
+	 *
+	 * @param wmMaintenanceInfo
+	 * @return Result
+	 */
+	@AutoLog(value = "维修派工信息")
+	@ApiOperation(value="维修派工信息", notes="维修派工信息")
+	@PutMapping(value = "/workEdit")
+	public Result<?> workEdit(@RequestBody WmMaintenanceInfo wmMaintenanceInfo) {
+		wmMaintenanceInfoService.saveWorkMaintenance(wmMaintenanceInfo);
+		return Result.ok("派工成功!");
+	}
+
 	/**
 	 *   通过id删除
 	 *
@@ -98,7 +111,7 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 		wmMaintenanceInfoService.removeById(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -112,7 +125,7 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 		this.wmMaintenanceInfoService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

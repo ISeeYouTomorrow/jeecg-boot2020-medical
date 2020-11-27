@@ -21,4 +21,10 @@ public interface IWmMaintenanceInfoService extends IService<WmMaintenanceInfo> {
      * @return Page<WmEquipmentTransferVO>
      */
     Page<WmMaintenancePageVO> queryForPage(Page<WmMaintenancePageVO> page, String equipmentName, String equipmentCode);
+
+    /**
+     * 保存维修派工信息
+     * @param wmMaintenanceInfo
+     */
+    void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
 }
