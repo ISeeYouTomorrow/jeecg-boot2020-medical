@@ -27,4 +27,10 @@ public interface IWmMaintenanceInfoService extends IService<WmMaintenanceInfo> {
      * @param wmMaintenanceInfo
      */
     void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
+
+    /**
+     * 保存维修信息
+     * @param wmMaintenanceInfo
+     */
+    void saveTreatmentMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
 }

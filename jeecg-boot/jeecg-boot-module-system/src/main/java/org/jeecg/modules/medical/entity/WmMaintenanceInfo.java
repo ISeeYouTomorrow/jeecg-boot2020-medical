@@ -84,7 +84,7 @@ public class WmMaintenanceInfo implements Serializable {
 	@Excel(name = "问题图片", width = 15)
     @ApiModelProperty(value = "问题图片")
     private String problemPictures;
-	/**维修状态*/
+	/**维修状态 0:待派工，1:待维修,2:维修中,3:已维修*/
 	@Excel(name = "维修状态", width = 15)
     @ApiModelProperty(value = "维修状态")
 	@Dict(dicCode = "maintenance_status")

@@ -76,4 +76,14 @@
         maintenance_remark = #{maintenanceRemark, jdbcType=DECIMAL}
         where id = #{id,jdbcType=VARCHAR}
     </update>
+
+    <!-- 维修信息保存 -->
+    <update id="saveTreatmentMaintenance" parameterType="org.jeecg.modules.medical.entity.WmMaintenanceInfo">
+        update wm_maintenance_info
+        set maintenance_status = #{maintenanceStatus,jdbcType=VARCHAR},
+        maintenance_result = #{maintenanceResult,jdbcType=VARCHAR},
+        maintenance_remark = #{maintenanceRemark,jdbcType=VARCHAR},
+        update_time = #{updateTime, jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

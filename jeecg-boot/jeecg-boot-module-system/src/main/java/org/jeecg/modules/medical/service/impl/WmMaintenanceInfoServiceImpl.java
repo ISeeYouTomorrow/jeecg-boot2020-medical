@@ -43,4 +43,13 @@ public class WmMaintenanceInfoServiceImpl extends ServiceImpl<WmMaintenanceInfoM
     public void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo) {
         wmMaintenanceInfoMapper.saveWorkMaintenance(wmMaintenanceInfo);
     }
+
+    /**
+     * 保存维修信息
+     * @param wmMaintenanceInfo
+     */
+    @Override
+    public void saveTreatmentMaintenance(WmMaintenanceInfo wmMaintenanceInfo) {
+        wmMaintenanceInfoMapper.saveTreatmentMaintenance(wmMaintenanceInfo);
+    }
 }

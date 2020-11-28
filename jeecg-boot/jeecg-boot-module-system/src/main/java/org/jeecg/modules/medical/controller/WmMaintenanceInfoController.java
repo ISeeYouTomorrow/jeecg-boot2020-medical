@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
@@ -95,6 +96,25 @@ public class WmMaintenanceInfoController extends JeecgController<WmMaintenanceIn
 	@PutMapping(value = "/workEdit")
 	public Result<?> workEdit(@RequestBody WmMaintenanceInfo wmMaintenanceInfo) {
 		wmMaintenanceInfoService.saveWorkMaintenance(wmMaintenanceInfo);
+		return Result.ok("派工成功!");
+	}
+	/**
+	 *  维修处理信息保存
+	 *
+	 * @param wmMaintenanceInfo
+	 * @return Result
+	 */
+	@AutoLog(value = "维修处理信息")
+	@ApiOperation(value="维修处理信息", notes="维修处理信息")
+	@PutMapping(value = "/treatmentEdit")
+	public Result<?> treatmentEdit(@RequestBody WmMaintenanceInfo wmMaintenanceInfo) {
+		//维修中
+		if (StringUtils.equals("1", wmMaintenanceInfo.getMaintenanceResult())) {
+			wmMaintenanceInfo.setMaintenanceStatus("3");
+		}else{
+			wmMaintenanceInfo.setMaintenanceStatus("2");
+		}
+		wmMaintenanceInfoService.saveTreatmentMaintenance(wmMaintenanceInfo);
 		return Result.ok("派工成功!");
 	}
 

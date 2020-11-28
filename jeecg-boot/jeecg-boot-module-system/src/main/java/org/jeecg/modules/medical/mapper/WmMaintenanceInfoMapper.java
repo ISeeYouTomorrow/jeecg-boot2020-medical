@@ -31,4 +31,10 @@ public interface WmMaintenanceInfoMapper extends BaseMapper<WmMaintenanceInfo> {
      * @param wmMaintenanceInfo
      */
     void saveWorkMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
+
+    /**
+     * 维修信息保存
+     * @param wmMaintenanceInfo
+     */
+    void saveTreatmentMaintenance(WmMaintenanceInfo wmMaintenanceInfo);
 }
