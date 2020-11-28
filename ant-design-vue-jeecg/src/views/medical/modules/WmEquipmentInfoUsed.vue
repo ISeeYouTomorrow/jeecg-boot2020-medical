@@ -216,7 +216,7 @@ export default {
     },
     /** 调用完edit()方法之后会自动调用此方法 */
     editAfter() {
-      // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measuerDay', 'contractCode')
+      // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
       let fieldval = pick(this.model, 'equipmentName', 'equipmentModel','equipmentCode', 'useDept', 'chargePerson', 'chargeArea')
       this.$nextTick(() => {
         this.form.setFieldsValue(fieldval)

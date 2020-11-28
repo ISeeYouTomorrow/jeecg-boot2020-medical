@@ -1,11 +1,13 @@
 package org.jeecg.modules.medical.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -27,7 +29,6 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -134,7 +135,7 @@ public class WmEquipmentInfoController {
 		IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -168,6 +169,20 @@ public class WmEquipmentInfoController {
 			//生成设备二维码和设备编号
 			String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
 			wmEquipmentInfo.setEquipmentQrcode(path);
+			if (StringUtils.equals(wmEquipmentInfo.getMeasureState(), "1")) {
+				if (wmEquipmentInfo.getStartUseTime() != null) {
+					Date date = wmEquipmentInfo.getStartUseTime();
+					Date temp = DateUtil.offsetDay(date,wmEquipmentInfo.getMeasureDay());
+					wmEquipmentInfo.setNextMeasureDay(temp);
+				}
+			}
+			if (wmEquipmentInfo.getStartUseTime() != null) {
+				Date date = wmEquipmentInfo.getStartUseTime();
+				Date temp = DateUtil.offsetDay(date,wmEquipmentInfo.getMaintainDay());
+				wmEquipmentInfo.setNextMaintainDay(temp);
+			}
+
+
 			wmEquipmentInfoService.saveMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
 		} else if (num > 1) {
 			wmEquipmentInfoService.saveBatchMain(code,count,wmEquipmentInfoPage);
@@ -175,7 +190,7 @@ public class WmEquipmentInfoController {
 
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -200,6 +215,19 @@ public class WmEquipmentInfoController {
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 		wmEquipmentInfo.setUpdateBy(sysUser.getUsername());
 		wmEquipmentInfo.setStartUseTime(date);
+		if (StringUtils.equals(wmEquipmentInfo.getMeasureState(), "1")) {
+			if (wmEquipmentInfo.getStartUseTime() != null) {
+				Date startUseTime = wmEquipmentInfo.getStartUseTime();
+				Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfo.getMeasureDay());
+				wmEquipmentInfo.setNextMeasureDay(temp);
+			}
+		}
+		if (wmEquipmentInfo.getStartUseTime() != null) {
+			Date startUseTime = wmEquipmentInfo.getStartUseTime();
+			Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfo.getMaintainDay());
+			wmEquipmentInfo.setNextMaintainDay(temp);
+		}
+
 		wmEquipmentInfoService.updateMain(wmEquipmentInfo, wmEquipmentInfoPage.getWmInviteBidList(),wmEquipmentInfoPage.getWmEquipmentApproveList());
 		return Result.ok("编辑成功!");
 	}
@@ -225,6 +253,18 @@ public class WmEquipmentInfoController {
 		 LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 		 wmEquipmentInfo.setStartUseTime(date);
 		 wmEquipmentInfo.setUpdateBy(sysUser.getUsername());
+		 if (StringUtils.equals(wmEquipmentInfo.getMeasureState(), "1")) {
+			 if (wmEquipmentInfo.getStartUseTime() != null) {
+				 Date startUseTime = wmEquipmentInfo.getStartUseTime();
+				 Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfoEntity.getMeasureDay());
+				 wmEquipmentInfo.setNextMeasureDay(temp);
+			 }
+		 }
+		 if (wmEquipmentInfo.getStartUseTime() != null) {
+			 Date startUseTime = wmEquipmentInfo.getStartUseTime();
+			 Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfoEntity.getMaintainDay());
+			 wmEquipmentInfo.setNextMaintainDay(temp);
+		 }
 		 wmEquipmentInfoService.updateUsed(wmEquipmentInfo);
 		 return Result.ok("编辑成功!");
 	 }
@@ -242,7 +282,7 @@ public class WmEquipmentInfoController {
 		wmEquipmentInfoService.delMain(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -256,7 +296,7 @@ public class WmEquipmentInfoController {
 		this.wmEquipmentInfoService.delBatchMain(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功！");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *
@@ -274,7 +314,7 @@ public class WmEquipmentInfoController {
 		return Result.ok(wmEquipmentInfo);
 
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

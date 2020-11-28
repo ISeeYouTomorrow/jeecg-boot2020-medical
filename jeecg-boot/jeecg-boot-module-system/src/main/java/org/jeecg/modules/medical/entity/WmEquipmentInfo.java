@@ -1,6 +1,8 @@
 package org.jeecg.modules.medical.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -141,7 +143,7 @@ public class WmEquipmentInfo implements Serializable {
 	/**计量周期(天)*/
 	@Excel(name = "计量周期(天)", width = 15)
     @ApiModelProperty(value = "计量周期(天)")
-    private java.lang.Integer measuerDay;
+    private java.lang.Integer measureDay;
 	/**合同编号*/
 	@Excel(name = "合同编号", width = 15, dictTable = "wm_contract_info", dicText = "contract_name", dicCode = "id")
     @Dict(dictTable = "wm_contract_info", dicText = "contract_name", dicCode = "id")
@@ -151,4 +153,16 @@ public class WmEquipmentInfo implements Serializable {
     @Excel(name = "设备状态", width = 15)
     @ApiModelProperty(value = "合同编号")
 	private String equipmentStatus;
+
+    /** 下次计量时间,首次默认为启用时间+计量周期*/
+    @Excel(name = "下次计量时间", width = 15)
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "下次计量时间")
+    private Date nextMeasureDay;
+
+    /** 下次保养时间,首次默认为启用时间+保养周期*/
+    @Excel(name = "下次保养时间", width = 15)
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "下次保养时间")
+    private Date nextMaintainDay;
 }

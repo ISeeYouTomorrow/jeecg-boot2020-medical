@@ -1,16 +1,17 @@
 package org.jeecg.modules.medical.vo;
 
-import java.util.List;
-
-import org.jeecg.modules.medical.entity.WmInviteBid;
-import org.jeecg.modules.medical.entity.WmEquipmentApprove;
-import lombok.Data;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.jeecg.modules.medical.entity.WmEquipmentApprove;
+import org.jeecg.modules.medical.entity.WmInviteBid;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.jeecgframework.poi.excel.annotation.ExcelCollection;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 设备档案信息
@@ -21,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Data
 @ApiModel(value="wm_equipment_infoPage对象", description="设备档案信息")
 public class WmEquipmentInfoPage {
-	
+
 	/**主键*/
 	@ApiModelProperty(value = "主键")
 	private java.lang.String id;
@@ -130,7 +131,7 @@ public class WmEquipmentInfoPage {
 	/**计量周期(天)*/
 	@Excel(name = "计量周期(天)", width = 15)
 	@ApiModelProperty(value = "计量周期(天)")
-	private java.lang.Integer measuerDay;
+	private java.lang.Integer measureDay;
 	/**合同编号*/
 	@Excel(name = "合同编号", width = 15)
 	@ApiModelProperty(value = "合同编号")
@@ -141,11 +142,24 @@ public class WmEquipmentInfoPage {
 	@ApiModelProperty(value = "合同编号")
 	private String equipmentStatus;
 
+	/** 下次计量时间,首次默认为启用时间+计量周期*/
+	@Excel(name = "下次计量时间", width = 15)
+	@ApiModelProperty(value = "下次计量时间")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date nextMeasureDay;
+
+	/** 下次保养时间,首次默认为启用时间+保养周期*/
+	@Excel(name = "下次保养时间", width = 15)
+	@ApiModelProperty(value = "下次保养时间")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date nextMaintainDay;
+
 	@ExcelCollection(name="设备招标信息")
 	@ApiModelProperty(value = "设备招标信息")
 	private List<WmInviteBid> wmInviteBidList;
+
 	@ExcelCollection(name="设备审批信息")
 	@ApiModelProperty(value = "设备审批信息")
 	private List<WmEquipmentApprove> wmEquipmentApproveList;
-	
+
 }
