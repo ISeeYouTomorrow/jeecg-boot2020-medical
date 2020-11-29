@@ -1,9 +1,11 @@
 package org.jeecg.modules.medical.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.modules.medical.entity.*;
 import org.jeecg.modules.medical.mapper.WmEquipmentApproveMapper;
 import org.jeecg.modules.medical.mapper.WmEquipmentInfoMapper;
@@ -44,7 +46,7 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 	private WmEquipmentUsedMapper wmEquipmentUsedMapper;
 
 
-	
+
 	@Override
 	@Transactional
 	public void saveMain(WmEquipmentInfo wmEquipmentInfo, List<WmInviteBid> wmInviteBidList,List<WmEquipmentApprove> wmEquipmentApproveList) {
@@ -71,11 +73,11 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 	@Transactional
 	public void updateMain(WmEquipmentInfo wmEquipmentInfo,List<WmInviteBid> wmInviteBidList,List<WmEquipmentApprove> wmEquipmentApproveList) {
 		wmEquipmentInfoMapper.updateById(wmEquipmentInfo);
-		
+
 		//1.先删除子表数据
 		wmInviteBidMapper.deleteByMainId(wmEquipmentInfo.getId());
 		wmEquipmentApproveMapper.deleteByMainId(wmEquipmentInfo.getId());
-		
+
 		//2.子表数据重新插入
 		if(CollectionUtil.isNotEmpty(wmInviteBidList)) {
 			for(WmInviteBid entity:wmInviteBidList) {
@@ -138,6 +140,20 @@ public class WmEquipmentInfoServiceImpl extends ServiceImpl<WmEquipmentInfoMappe
 			wmEquipmentInfo.setEquipmentQrcode(path);
 			List<WmInviteBid> wmInviteBidList = wmEquipmentInfoPage.getWmInviteBidList();
 			List<WmEquipmentApprove> wmEquipmentApproveList = wmEquipmentInfoPage.getWmEquipmentApproveList();
+
+			/** 设置下次保养日期，下次计量日期 */
+			if (StringUtils.equals(wmEquipmentInfo.getMeasureState(), "1")) {
+				if (wmEquipmentInfo.getStartUseTime() != null) {
+					Date startUseTime = wmEquipmentInfo.getStartUseTime();
+					Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfo.getMeasureDay());
+					wmEquipmentInfo.setNextMeasureDay(temp);
+				}
+			}
+			if (wmEquipmentInfo.getStartUseTime() != null) {
+				Date startUseTime = wmEquipmentInfo.getStartUseTime();
+				Date temp = DateUtil.offsetDay(startUseTime,wmEquipmentInfo.getMaintainDay());
+				wmEquipmentInfo.setNextMaintainDay(temp);
+			}
 			wmEquipmentInfoMapper.insert(wmEquipmentInfo);
 			if(CollectionUtil.isNotEmpty(wmInviteBidList)) {
 				for(WmInviteBid entity:wmInviteBidList) {
