@@ -9,11 +9,11 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('设备保养记录')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('设备计量计划')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -42,7 +42,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -84,25 +84,24 @@
       </a-table>
     </div>
 
-    <wmMaintenanceHistory-modal ref="modalForm" @ok="modalFormOk"></wmMaintenanceHistory-modal>
+    <wmMeasurePlan-modal ref="modalForm" @ok="modalFormOk"></wmMeasurePlan-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import WmMaintenanceHistoryModal from './modules/WmMaintenanceHistoryModal'
-  import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import WmMeasurePlanModal from './modules/WmMeasurePlanModal'
 
   export default {
-    name: "WmMaintenanceHistoryList",
+    name: "WmMeasurePlanList",
     mixins:[JeecgListMixin],
     components: {
-      WmMaintenanceHistoryModal
+      WmMeasurePlanModal
     },
     data () {
       return {
-        description: '设备保养记录管理页面',
+        description: '设备计量计划管理页面',
         // 表头
         columns: [
           {
@@ -116,52 +115,37 @@
             }
           },
           {
-            title:'设备保养计划',
+            title:'计划名称',
             align:"center",
-            dataIndex: 'maintenancePlanId_dictText'
+            dataIndex: 'planName'
           },
           {
-            title:'保养设备id',
+            title:'计划时间',
             align:"center",
-            dataIndex: 'equipmentId'
-          },
-          {
-            title:'保养厂商',
-            align:"center",
-            dataIndex: 'manufacturerId'
-          },
-          {
-            title:'保养人',
-            align:"center",
-            dataIndex: 'manufacturerPerson'
-          },
-          {
-            title:'保养状态',
-            align:"center",
-            dataIndex: 'maintenanceStatus'
-          },
-          {
-            title:'保养时间',
-            align:"center",
-            dataIndex: 'maintenanceTime',
+            dataIndex: 'planTime',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'保养费用',
+            title:'预估经费',
             align:"center",
-            dataIndex: 'maintenanceFee'
+            dataIndex: 'planFee'
           },
           {
-            title:'保养结果',
+            title:'备注信息',
             align:"center",
-            dataIndex: 'maintenanceResult_dictText'
+            dataIndex: 'planRemark'
           },
           {
-            title:'验收状态',
+            title:'已计量数量',
             align:"center",
-            dataIndex: 'maintenanceCheck'
+            dataIndex: 'finishedNumber'
+          },
+          {
+            title:'未计量数量',
+            align:"center",
+            dataIndex: 'notFinishedNumber'
           },
           {
             title: '操作',
@@ -171,11 +155,11 @@
           }
         ],
         url: {
-          list: "/medical/wmMaintenanceHistory/list",
-          delete: "/medical/wmMaintenanceHistory/delete",
-          deleteBatch: "/medical/wmMaintenanceHistory/deleteBatch",
-          exportXlsUrl: "/medical/wmMaintenanceHistory/exportXls",
-          importExcelUrl: "medical/wmMaintenanceHistory/importExcel",
+          list: "/medical/wmMeasurePlan/list",
+          delete: "/medical/wmMeasurePlan/delete",
+          deleteBatch: "/medical/wmMeasurePlan/deleteBatch",
+          exportXlsUrl: "/medical/wmMeasurePlan/exportXls",
+          importExcelUrl: "medical/wmMeasurePlan/importExcel",
         },
         dictOptions:{},
       }

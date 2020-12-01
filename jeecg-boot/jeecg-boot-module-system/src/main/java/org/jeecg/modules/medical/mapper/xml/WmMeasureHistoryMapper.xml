@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.jeecg.modules.medical.mapper.WmMaintenanceHistoryMapper">
+<mapper namespace="org.jeecg.modules.medical.mapper.WmMeasureHistoryMapper">
 
-    <!-- 分页展示保养记录 -->
-    <select id="selectForPage" resultType="org.jeecg.modules.medical.vo.WmMaintenanceHistoryVO">
-        SELECT a.id as equipment_id,a.equipment_code,a.equipment_name,a.equipment_model,a.equipment_type,a.maintain_day,
-        a.charge_area,a.a.charge_person,use_dept,a.next_maintain_day,
+    <!-- 分页展示计量记录 -->
+    <select id="selectForPage" resultType="org.jeecg.modules.medical.vo.WmMeasureHistoryVO">
+        SELECT a.id as equipment_id,a.equipment_code,a.equipment_name,a.equipment_model,a.equipment_type,a.measure_day,
+        a.charge_area,a.a.charge_person,use_dept,a.next_measure_day,
         b.create_by,
         b.create_time,
         b.update_by,
         b.update_time,
         b.sys_org_code,
-        b.maintenance_plan_id,
+        b.measure_plan_id,
         b.id,
         b.manufacturer_id,
         b.manufacturer_person,
-        b.maintenance_status,
-        b.maintenance_time,
-        b.maintenance_fee,
-        b.maintenance_result,
-        b.maintenance_check
+        b.measure_status,
+        b.measure_time,
+        b.measure_fee,
+        b.measure_result,
+        b.measure_check
         FROM
         (
         SELECT
@@ -28,15 +28,16 @@
         equipment_name,
         equipment_model,
         equipment_type,
-        maintain_day,
-        next_maintain_day,
+        measure_day,
+        next_measure_day,
         charge_area,
         charge_person,
         use_dept
         FROM
         wm_equipment_info
         WHERE
-        next_maintain_day <![CDATA[ <= ]]> DATE_ADD(SYSDATE(),INTERVAL ${cycleDay} DAY)) a
+        measure_state = '1'
+        and next_measure_day <![CDATA[ <= ]]> DATE_ADD(SYSDATE(),INTERVAL ${cycleDay} DAY)) a
         LEFT JOIN
         (SELECT
         id,
@@ -45,20 +46,20 @@
         update_by,
         update_time,
         sys_org_code,
-        maintenance_plan_id,
+        measure_plan_id,
         equipment_id,
         manufacturer_id,
         manufacturer_person,
-        maintenance_status,
-        maintenance_time,
-        maintenance_fee,
-        maintenance_result,
-        maintenance_check
+        measure_status,
+        measure_time,
+        measure_fee,
+        measure_result,
+        measure_check
         FROM
-        wm_maintenance_history
+        wm_measure_history
         ) b
         ON a.id = b.equipment_id
-        AND b.create_time BETWEEN DATE_SUB(a.next_maintain_day,INTERVAL a.maintain_day DAY) AND a.next_maintain_day
+        AND b.create_time BETWEEN DATE_SUB(a.next_measure_day,INTERVAL a.measure_day DAY) AND a.next_measure_day
         WHERE 1=1
         <if test="equipmentName != null and equipmentName !=''">
             AND a.equipment_name = #{equipmentName,jdbcType=VARCHAR}
@@ -66,76 +67,76 @@
         <if test="equipmentCode != null and equipmentCode !=''">
             AND a.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
         </if>
-        order by b.maintenance_status asc, b.create_time desc, a.next_maintain_day ASC
+        order by b.measure_status asc, b.create_time desc, a.next_measure_day ASC
     </select>
 
 
-    <!-- 保养实施分页列表，查询设备保养的历史记录 -->
-    <select id="selectForWorkPage" resultType="org.jeecg.modules.medical.vo.WmMaintenanceHistoryVO">
+    <!-- 计量实施分页列表，查询设备计量的历史记录 -->
+    <select id="selectForWorkPage" resultType="org.jeecg.modules.medical.vo.WmMeasureHistoryVO">
         SELECT
           a.id,
           a.create_time,
           a.equipment_id,
-          a.maintenance_plan_id,
-          a.maintenance_result,
-          a.maintenance_fee,
-          a.maintenance_status,
-          a.maintenance_time,
+          a.measure_plan_id,
+          a.measure_result,
+          a.measure_fee,
+          a.measure_status,
+          a.measure_time,
           a.manufacturer_id,
           a.manufacturer_person,
           b.equipment_code,
           b.equipment_name,
           b.equipment_model,
           b.equipment_type,
-          b.maintain_day,
+          b.measure_day,
           b.charge_area,
           b.charge_person,
           b.use_dept,
           b.start_use_time,
-          b.next_maintain_day,
-          c.paln_name as plan_name,c.plan_time
+          b.next_measure_day,
+          c.plan_name,c.plan_time
         FROM
-          wm_maintenance_history a,
+          wm_measure_history a,
           wm_equipment_info b,
-          wm_maintenance_plan c
-        WHERE a.equipment_id = b.id AND a.maintenance_plan_id = c.id
+          wm_measure_plan c
+        WHERE a.equipment_id = b.id AND a.measure_plan_id = c.id
         <if test="equipmentName != null and equipmentName !=''">
             AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
         </if>
         <if test="equipmentCode != null and equipmentCode !=''">
             AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
         </if>
-        order by a.maintenance_status asc, a.create_time desc
+        order by a.measure_status asc, a.create_time desc
     </select>
 
-    <!-- 查询设备上次的保养记录 -->
-    <select id="queryLastMaintainInfo" resultType="org.jeecg.modules.medical.entity.WmMaintenanceHistory">
+    <!-- 查询设备上次的计量记录 -->
+    <select id="queryLastMeasureInfo" resultType="org.jeecg.modules.medical.entity.WmMeasureHistory">
         SELECT
           a.id,
           a.create_time,
           a.equipment_id,
-          a.maintenance_plan_id,
-          a.maintenance_result,
-          a.maintenance_fee,
-          a.maintenance_status,
-          a.maintenance_time,
+          a.measure_plan_id,
+          a.measure_result,
+          a.measure_fee,
+          a.measure_status,
+          a.measure_time,
           a.manufacturer_id,
           a.manufacturer_person
-        FROM wm_maintenance_history a WHERE a.equipment_id = #{equipmentId,jdbcType=VARCHAR}
+        FROM wm_measure_history a WHERE a.equipment_id = #{equipmentId,jdbcType=VARCHAR}
         ORDER BY a.create_time DESC LIMIT 1,1
     </select>
 
     <!-- 待验收、已验收 -->
-    <select id="selectForCheckPage" resultType="org.jeecg.modules.medical.vo.WmMaintenanceHistoryVO">
+    <select id="selectForCheckPage" resultType="org.jeecg.modules.medical.vo.WmMeasureHistoryVO">
         SELECT
         a.id,
         a.create_time,
         a.equipment_id,
-        a.maintenance_plan_id,
-        a.maintenance_result,
-        a.maintenance_fee,
-        a.maintenance_status,
-        a.maintenance_time,
+        a.measure_plan_id,
+        a.measure_result,
+        a.measure_fee,
+        a.measure_status,
+        a.measure_time,
         a.manufacturer_id,
         a.manufacturer_person,
         a.check_person,
@@ -144,25 +145,25 @@
         b.equipment_name,
         b.equipment_model,
         b.equipment_type,
-        b.maintain_day,
+        b.measure_day,
         b.charge_area,
         b.charge_person,
         b.use_dept,
         b.start_use_time,
-        b.next_maintain_day,
-        c.paln_name as plan_name,c.plan_time
+        b.next_measure_day,
+        c.plan_name,c.plan_time
         FROM
-        wm_maintenance_history a,
+        wm_measure_history a,
         wm_equipment_info b,
-        wm_maintenance_plan c
-        WHERE a.equipment_id = b.id AND a.maintenance_plan_id = c.id
-        AND a.maintenance_status in ('2','3')
+        wm_measure_plan c
+        WHERE a.equipment_id = b.id AND a.measure_plan_id = c.id
+        AND a.measure_status in ('2','3')
         <if test="equipmentName != null and equipmentName !=''">
             AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
         </if>
         <if test="equipmentCode != null and equipmentCode !=''">
             AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
         </if>
-        order by a.maintenance_status asc, a.create_time desc
+        order by a.measure_status asc, a.create_time desc
     </select>
 </mapper>
