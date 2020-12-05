@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.medical.mapper.WmEquipmentExamineHistoryMapper">
+
+    <!-- 设备巡检历史记录分页查询 -->
+    <select id="selectForPage" resultType="org.jeecg.modules.medical.vo.WmExamineHistoryVO" parameterType="org.jeecg.modules.medical.vo.WmExamineHistoryVO">
+        SELECT
+            c.examine_name,
+            c.examine_person AS plan_person,
+            c.examine_remark AS plan_remark,
+            c.examine_time AS plan_time,
+            a.id AS equipment_id,
+            a.equipment_name,
+            a.equipment_code,
+            a.equipment_model,
+            a.use_dept,
+            a.charge_person,
+            a.charge_area,
+            b.id,
+            b.create_time,
+            b.examine_id,
+            b.examine_person,
+            b.examine_result,
+            b.remark,
+            b.examine_time
+      FROM
+        wm_equipment_examine c
+        LEFT JOIN wm_equipment_info a
+        ON c.equipment_type = a.equipment_type
+        AND c.examine_area = a.charge_area
+        AND c.examine_dept = a.use_dept
+        AND c.sys_org_code = a.sys_org_code
+        LEFT JOIN wm_equipment_examine_history b
+        ON a.id = b.equipment_id
+       WHERE c.id = #{history.examineId,jdbcType=VARCHAR}
+        <if test="history.equipmentName != null and history.equipmentName !=''">
+            AND a.equipment_name = #{history.equipmentName,jdbcType=VARCHAR}
+        </if>
+        <if test="history.equipmentCode != null and history.equipmentCode !=''">
+            AND a.equipment_code = #{history.equipmentCode,jdbcType=VARCHAR}
+        </if>
+       order by b.examine_time asc ,a.create_time desc
+    </select>
+</mapper>

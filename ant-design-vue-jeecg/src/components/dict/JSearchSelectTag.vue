@@ -149,9 +149,12 @@
         this.callback()
       },
       handleAsyncChange(selectedObj){
+
         this.selectedAsyncValue = selectedObj
-        this.selectedValue = selectedObj.key
-        this.callback()
+        if (selectedObj) {
+          this.selectedValue = selectedObj.key
+          this.callback()
+        }
       },
       callback(){
         this.$emit('change', this.selectedValue);

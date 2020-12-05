@@ -56,8 +56,8 @@ public class WmEquipmentInfo implements Serializable {
     @ApiModelProperty(value = "所属部门")
     private java.lang.String sysOrgCode;
 	/**设备类型*/
-	@Excel(name = "设备类型", width = 15, dictTable = "wm_equipment_type", dicText = "id,pid,type_name,has_child", dicCode = "0")
-    @Dict(dictTable = "wm_equipment_type", dicText = "id,pid,type_name,has_child", dicCode = "0")
+    @Excel(name = "设备类型", width = 15, dictTable = "wm_equipment_type", dicText = "id,pid,type_name,has_child", dicCode = "0")
+    @Dict(dictTable = "wm_equipment_type", dicText = "id,pid,type_name,has_child", dicCode = "0",pageDictCode = "id", pageDictText = "type_name")
     @ApiModelProperty(value = "设备类型")
     private java.lang.String equipmentType;
 	/**设备名称*/
