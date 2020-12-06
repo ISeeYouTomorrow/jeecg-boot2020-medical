@@ -144,12 +144,17 @@ public class WmEquipmentInfo implements Serializable {
 	@Excel(name = "计量周期(天)", width = 15)
     @ApiModelProperty(value = "计量周期(天)")
     private java.lang.Integer measureDay;
+
+    /**折旧周期(天)*/
+    @Excel(name = "折旧周期(天)", width = 15)
+    @ApiModelProperty(value = "折旧周期(天)")
+    private java.lang.Integer depreciateDay;
 	/**合同编号*/
 	@Excel(name = "合同编号", width = 15, dictTable = "wm_contract_info", dicText = "contract_name", dicCode = "id")
     @Dict(dictTable = "wm_contract_info", dicText = "contract_name", dicCode = "id")
     @ApiModelProperty(value = "合同编号")
     private java.lang.String contractCode;
-	/** 设备状态 0=默认(闲置) 1=已使用 2=已借用 3=维修 4=保养  5=计量*/
+	/** 设备状态 0=默认(闲置) 1=已使用 2=已借用 3=维修 4=保养  5=计量 8=报废*/
     @Excel(name = "设备状态", width = 15)
     @ApiModelProperty(value = "合同编号")
 	private String equipmentStatus;

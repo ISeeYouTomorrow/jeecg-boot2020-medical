@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.jeecg.common.aspect.annotation.Dict;
 import org.jeecg.modules.medical.entity.WmEquipmentApprove;
 import org.jeecg.modules.medical.entity.WmInviteBid;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelCollection;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -109,13 +111,16 @@ public class WmEquipmentInfoPage {
 	/**使用科室*/
 	@Excel(name = "使用科室", width = 15)
 	@ApiModelProperty(value = "使用科室")
+	@Dict(dictTable = "sys_depart", dicText = "depart_name", dicCode = "id")
 	private java.lang.String useDept;
 	/**使用人*/
 	@Excel(name = "使用人", width = 15)
 	@ApiModelProperty(value = "使用人")
+	@Dict(dictTable = "sys_user", dicText = "realname", dicCode = "username")
 	private java.lang.String chargePerson;
 	/**安放位置*/
-	@Excel(name = "安放位置", width = 15)
+	@Excel(name = "安放位置", width = 15,dictTable = "wm_area_space", dicText = "id,pid,area_name,has_child", dicCode = "0")
+	@Dict(dictTable = "wm_area_space", dicText = "id,pid,area_name,has_child", dicCode = "0",pageDictCode = "id", pageDictText = "area_name")
 	@ApiModelProperty(value = "安放位置")
 	private java.lang.String chargeArea;
 	/**启用时间*/
@@ -132,6 +137,12 @@ public class WmEquipmentInfoPage {
 	@Excel(name = "计量周期(天)", width = 15)
 	@ApiModelProperty(value = "计量周期(天)")
 	private java.lang.Integer measureDay;
+
+	/**折旧周期(天)*/
+	@Excel(name = "折旧周期(天)", width = 15)
+	@ApiModelProperty(value = "折旧周期(天)")
+	private java.lang.Integer depreciateDay;
+
 	/**合同编号*/
 	@Excel(name = "合同编号", width = 15)
 	@ApiModelProperty(value = "合同编号")
@@ -162,4 +173,6 @@ public class WmEquipmentInfoPage {
 	@ApiModelProperty(value = "设备审批信息")
 	private List<WmEquipmentApprove> wmEquipmentApproveList;
 
+	/**当前价值 */
+	private BigDecimal currentWorth;
 }

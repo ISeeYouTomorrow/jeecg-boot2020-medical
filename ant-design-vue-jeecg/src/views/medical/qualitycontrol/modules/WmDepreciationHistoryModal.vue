@@ -10,23 +10,14 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="巡检设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'equipmentId', validatorRules.equipmentId]" placeholder="请输入巡检设备"></a-input>
+        <a-form-item label="折旧设备" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'equipmentId', validatorRules.equipmentId]" placeholder="请输入折旧设备"></a-input>
         </a-form-item>
-        <a-form-item label="巡检计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['examineId', validatorRules.examineId]" :trigger-change="true" dictCode="wm_equipment_examine,examine_name,id" placeholder="请选择巡检计划"/>
+        <a-form-item label="原价值" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'oldWorth', validatorRules.oldWorth]" placeholder="请输入原价值"></a-input>
         </a-form-item>
-        <a-form-item label="巡检人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-select-user-by-dep v-decorator="['examinePerson', validatorRules.examinePerson]" :trigger-change="true"/>
-        </a-form-item>
-        <a-form-item label="巡检结果" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['examineResult', validatorRules.examineResult]" :trigger-change="true" dictCode="examine_result" placeholder="请选择巡检结果"/>
-        </a-form-item>
-        <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['remark', validatorRules.remark]" rows="4" placeholder="请输入备注"/>
-        </a-form-item>
-        <a-form-item label="巡检时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择巡检时间" v-decorator="[ 'examineTime', validatorRules.examineTime]" :trigger-change="true" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%"/>
+        <a-form-item label="当前价值" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'currentWorth', validatorRules.currentWorth]" placeholder="请输入当前价值"></a-input>
         </a-form-item>
 
       </a-form>
@@ -39,16 +30,10 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import { validateDuplicateValue } from '@/utils/util'
-  import JDate from '@/components/jeecg/JDate'  
-  import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
-  import JDictSelectTag from "@/components/dict/JDictSelectTag"
 
   export default {
-    name: "WmEquipmentExamineHistoryModal",
+    name: "WmDepreciationHistoryModal",
     components: { 
-      JDate,
-      JSelectUserByDep,
-      JDictSelectTag,
     },
     data () {
       return {
@@ -69,21 +54,16 @@
         validatorRules: {
           equipmentId: {rules: [
           ]},
-          examineId: {rules: [
+          oldWorth: {rules: [
+           {pattern:/^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!'},
           ]},
-          examinePerson: {rules: [
-          ]},
-          examineResult: {rules: [
-          ]},
-          remark: {rules: [
-            {pattern:/^.{6,18}$/, message: '请输入6到18位任意字符!'},
-          ]},
-          examineTime: {rules: [
+          currentWorth: {rules: [
+           {pattern:/^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!'},
           ]},
         },
         url: {
-          add: "/medical/wmEquipmentExamineHistory/add",
-          edit: "/medical/wmEquipmentExamineHistory/edit",
+          add: "/medical/wmDepreciationHistory/add",
+          edit: "/medical/wmDepreciationHistory/edit",
         }
       }
     },
@@ -98,7 +78,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'equipmentId','examineId','examinePerson','examineResult','remark','examineTime'))
+          this.form.setFieldsValue(pick(this.model,'equipmentId','oldWorth','currentWorth'))
         })
       },
       close () {
@@ -141,7 +121,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'equipmentId','examineId','examinePerson','examineResult','remark','examineTime'))
+        this.form.setFieldsValue(pick(row,'equipmentId','oldWorth','currentWorth'))
       },
 
       

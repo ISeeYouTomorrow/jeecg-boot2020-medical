@@ -11,6 +11,7 @@ public enum EquipmentStatusEnum {
     STATUS_ENUM3("3","维修"),
     STATUS_ENUM4("4","保养"),
     STATUS_ENUM5("5","计量"),
+    STATUS_ENUM8("8","报废"),
     STATUS_ENUM9("9","删除")
     ;
 

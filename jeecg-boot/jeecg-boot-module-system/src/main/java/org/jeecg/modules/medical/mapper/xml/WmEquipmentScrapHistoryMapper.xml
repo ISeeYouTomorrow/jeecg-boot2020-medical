@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.medical.mapper.WmEquipmentScrapHistoryMapper">
+
+    <!-- 查看设备报废信息  -->
+    <select id="selectForPage" resultType="org.jeecg.modules.medical.vo.WmEquipmentScrapVO">
+        SELECT a.*,
+          b.equipment_name,
+          b.equipment_code,
+          b.equipment_type,
+          b.equipment_model FROM wm_equipment_scrap_history a ,wm_equipment_info b
+          WHERE a.equipment_id = b.id
+          <if test="equipmentName != null and equipmentName !=''">
+            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
+          </if>
+          <if test="equipmentCode != null and equipmentCode !=''">
+            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+          </if>
+          ORDER BY a.scrap_state ASC, a.create_time DESC
+    </select>
+</mapper>

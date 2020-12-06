@@ -4,16 +4,35 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="设备名称">
+              <a-input placeholder="请输入设备名称" v-model="queryParam.equipmentName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="设备编号">
+              <a-input placeholder="请输入设备编号" v-model="queryParam.equipmentCode"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+              <!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+              <!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+              <!--              </a>-->
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('设备巡检计划')">导出</a-button>
+      <a-button @click="handleAdd('报废设备')" type="primary" icon="plus">报废设备</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('设备报废记录')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -42,7 +61,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -66,11 +85,13 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical" />
-          <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
+<!--          <a @click="handleCancel(record)">撤销</a>-->
+              <a-popconfirm title="确定删除吗?" @confirm="() => handleCancel(record)">
+                <a>删除</a>
+              </a-popconfirm>
+<!--          <a-divider type="vertical" />-->
+<!--          <a-dropdown>-->
+<!--            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>-->
             <a-menu slot="overlay">
               <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -78,31 +99,31 @@
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
-          </a-dropdown>
+<!--          </a-dropdown>-->
         </span>
 
       </a-table>
     </div>
 
-    <wmEquipmentExamine-modal ref="modalForm" @ok="modalFormOk"></wmEquipmentExamine-modal>
+    <wmEquipmentScrapHistory-modal ref="modalForm" @ok="modalFormOk"></wmEquipmentScrapHistory-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import WmEquipmentExamineModal from './modules/WmEquipmentExamineModal'
-  import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import WmEquipmentScrapHistoryModal from './modules/WmEquipmentScrapHistoryModal'
+  import { deleteAction } from '@api/manage'
 
   export default {
-    name: "WmEquipmentExamineList",
+    name: "WmEquipmentScrapHistoryList",
     mixins:[JeecgListMixin],
     components: {
-      WmEquipmentExamineModal
+      WmEquipmentScrapHistoryModal
     },
     data () {
       return {
-        description: '设备巡检计划管理页面',
+        description: '设备报废记录管理页面',
         // 表头
         columns: [
           {
@@ -116,44 +137,35 @@
             }
           },
           {
-            title:'巡检计划名称',
+            title:'设备编号',
             align:"center",
-            dataIndex: 'examineName'
+            dataIndex: 'equipmentCode'
           },
           {
-            title:'巡检科室',
+            title:'设备名称',
             align:"center",
-            dataIndex: 'examineDept_dictText'
+            dataIndex: 'equipmentName'
           },
           {
-            title:'设备类型',
+            title:'设备型号',
             align:"center",
-            dataIndex: 'equipmentType'
+            dataIndex: 'equipmentModel'
           },
           {
-            title:'巡检区域',
+            title:'备注信息',
             align:"center",
-            dataIndex: 'examineArea'
+            dataIndex: 'remark'
           },
           {
-            title:'巡检人',
+            title:'报废附件',
             align:"center",
-            dataIndex: 'examinePerson_dictText'
+            dataIndex: 'scrapFile',
+            scopedSlots: {customRender: 'fileSlot'}
           },
           {
-            title:'巡检时间',
+            title:'报废状态',
             align:"center",
-            dataIndex: 'examineTime'
-          },
-          {
-            title:'巡检备注',
-            align:"center",
-            dataIndex: 'examineRemark'
-          },
-          {
-            title:'巡检状态',
-            align:"center",
-            dataIndex: 'examineState'
+            dataIndex: 'scrapState_dictText'
           },
           {
             title: '操作',
@@ -163,11 +175,11 @@
           }
         ],
         url: {
-          list: "/medical/wmEquipmentExamine/list",
-          delete: "/medical/wmEquipmentExamine/delete",
-          deleteBatch: "/medical/wmEquipmentExamine/deleteBatch",
-          exportXlsUrl: "/medical/wmEquipmentExamine/exportXls",
-          importExcelUrl: "medical/wmEquipmentExamine/importExcel",
+          list: "/medical/wmEquipmentScrapHistory/list",
+          delete: "/medical/wmEquipmentScrapHistory/delete",
+          deleteBatch: "/medical/wmEquipmentScrapHistory/deleteBatch",
+          exportXlsUrl: "/medical/wmEquipmentScrapHistory/exportXls",
+          importExcelUrl: "medical/wmEquipmentScrapHistory/importExcel",
         },
         dictOptions:{},
       }
@@ -179,6 +191,25 @@
     },
     methods: {
       initDictConfig(){
+      },
+      /**
+       * 撤销
+       * @param record
+       */
+      handleCancel (record) {
+        if(!this.url.delete){
+          this.$message.error("请设置url.delete属性!")
+          return
+        }
+        let that = this;
+        deleteAction(that.url.delete, {id: record.id,equipmentId:record.equipmentId}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
       }
     }
   }

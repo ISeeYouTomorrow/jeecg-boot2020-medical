@@ -4,16 +4,35 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="设备名称">
+              <a-input placeholder="请输入设备名称" v-model="queryParam.equipmentName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="设备编号">
+              <a-input placeholder="请输入设备编号" v-model="queryParam.equipmentCode"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('设备巡检记录')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('设备折旧记录')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -42,7 +61,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -84,25 +103,24 @@
       </a-table>
     </div>
 
-    <wmEquipmentExamineHistory-modal ref="modalForm" @ok="modalFormOk"></wmEquipmentExamineHistory-modal>
+    <wmDepreciationHistory-modal ref="modalForm" @ok="modalFormOk"></wmDepreciationHistory-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import WmEquipmentExamineHistoryModal from './modules/WmEquipmentExamineHistoryModal'
-  import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import WmDepreciationHistoryModal from './modules/WmDepreciationHistoryModal'
 
   export default {
-    name: "WmEquipmentExamineHistoryList",
+    name: "WmDepreciationHistoryList",
     mixins:[JeecgListMixin],
     components: {
-      WmEquipmentExamineHistoryModal
+      WmDepreciationHistoryModal
     },
     data () {
       return {
-        description: '设备巡检记录管理页面',
+        description: '设备折旧记录管理页面',
         // 表头
         columns: [
           {
@@ -116,48 +134,58 @@
             }
           },
           {
-            title:'巡检设备',
+            title:'设备编号',
             align:"center",
-            dataIndex: 'equipmentId'
+            dataIndex: 'equipmentCode'
           },
           {
-            title:'巡检计划',
+            title:'设备名称',
             align:"center",
-            dataIndex: 'examineId_dictText'
+            dataIndex: 'equipmentName'
           },
           {
-            title:'巡检人',
+            title:'设备型号',
             align:"center",
-            dataIndex: 'examinePerson_dictText'
+            dataIndex: 'equipmentModel'
           },
           {
-            title:'巡检结果',
+            title:'使用科室',
             align:"center",
-            dataIndex: 'examineResult_dictText'
+            dataIndex: 'useDept_dictText'
           },
           {
-            title:'备注',
+            title:'使用人',
             align:"center",
-            dataIndex: 'remark'
+            dataIndex: 'chargePerson_dictText'
           },
           {
-            title:'巡检时间',
+            title:'折旧周期(天)',
             align:"center",
-            dataIndex: 'examineTime'
+            dataIndex: 'depreciateDay'
           },
           {
-            title: '操作',
-            dataIndex: 'action',
+            title:'原价值(￥)',
             align:"center",
-            scopedSlots: { customRender: 'action' }
-          }
+            dataIndex: 'procurementPrice'
+          },
+          {
+            title:'当前价值',
+            align:"center",
+            dataIndex: 'currentWorth'
+          },
+          // {
+          //   title: '操作',
+          //   dataIndex: 'action',
+          //   align:"center",
+          //   scopedSlots: { customRender: 'action' }
+          // }
         ],
         url: {
-          list: "/medical/wmEquipmentExamineHistory/list",
-          delete: "/medical/wmEquipmentExamineHistory/delete",
-          deleteBatch: "/medical/wmEquipmentExamineHistory/deleteBatch",
-          exportXlsUrl: "/medical/wmEquipmentExamineHistory/exportXls",
-          importExcelUrl: "medical/wmEquipmentExamineHistory/importExcel",
+          list: "/medical/wmDepreciationHistory/equipmentList",
+          delete: "/medical/wmDepreciationHistory/delete",
+          deleteBatch: "/medical/wmDepreciationHistory/deleteBatch",
+          exportXlsUrl: "/medical/wmDepreciationHistory/exportXls",
+          importExcelUrl: "medical/wmDepreciationHistory/importExcel",
         },
         dictOptions:{},
       }

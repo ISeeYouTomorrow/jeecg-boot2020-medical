@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.medical.mapper.WmDepreciationHistoryMapper">
+
+    <!-- 设备折旧列表页 -->
+    <select id="selectEquipmentForPage" resultType="org.jeecg.modules.medical.vo.WmEquipmentInfoPage">
+         SELECT a.*,
+         (SELECT current_worth FROM wm_depreciation_history b WHERE a.id = b.equipment_id ORDER BY b.create_time DESC LIMIT 1) AS current_worth
+         FROM wm_equipment_info a
+        WHERE 1=1
+        <if test="equipmentName != null and equipmentName !=''">
+            AND a.equipment_name = #{equipmentName,jdbcType=VARCHAR}
+        </if>
+        <if test="equipmentCode != null and equipmentCode !=''">
+            AND a.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+        </if>
+        order by a.create_time desc
+    </select>
+</mapper>

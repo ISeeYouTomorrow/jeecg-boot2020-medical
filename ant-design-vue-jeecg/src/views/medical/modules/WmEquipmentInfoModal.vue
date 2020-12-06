@@ -155,9 +155,15 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label="计量周期(天)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number v-if="model.measureState === '1'" v-decorator="[ 'measureDay', validatorRules.measureDay]" placeholder="请输入计量周期(天)"
+            <a-form-item  label="计量周期(天)" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input-number  v-decorator="[ 'measureDay', validatorRules.measureDay]" placeholder="请输入计量周期(天)"
                               style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item  label="折旧周期(天)" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input-number  v-decorator="[ 'depreciateDay', validatorRules.depreciateDay]" placeholder="请输入折旧周期(天)"
+                               style="width: 100%"/>
             </a-form-item>
           </a-col>
           <a-divider type="horizontal" />
@@ -364,6 +370,11 @@ export default {
             {required:true,pattern: /^-?\d+$/, message: '请输入保养周期(整数)!'},
           ]
         },
+        depreciateDay: {
+          rules: [
+            {required:true,pattern: /^-?\d+$/, message: '请输入折旧周期(整数)!'},
+          ]
+        },
         measureDay: {
           rules: [
             {required:true,pattern: /^-?\d+$/, message: '请输入计量周期(整数)!'},
@@ -470,7 +481,7 @@ export default {
     /** 调用完edit()方法之后会自动调用此方法 */
     editAfter() {
       // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
-      let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
+      let fieldval = pick(this.model, 'equipmentType', 'equipmentName','depreciateDay', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
       this.$nextTick(() => {
         this.form.setFieldsValue(fieldval)
         this.$refs.wmInviteBidForm.initFormData(this.url.wmInviteBid.list, this.model.id)
@@ -506,7 +517,7 @@ export default {
     },
     popupCallback(row) {
       // 'equipmentAliasName',
-      this.form.setFieldsValue(pick(row, 'equipmentType', 'equipmentName','equipmentCode',  'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode'))
+      this.form.setFieldsValue(pick(row, 'equipmentType', 'equipmentName','depreciateDay','equipmentCode',  'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode'))
     },
 
   }
