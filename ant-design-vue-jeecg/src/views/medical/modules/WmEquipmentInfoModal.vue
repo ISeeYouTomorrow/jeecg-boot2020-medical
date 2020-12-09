@@ -72,7 +72,9 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="设备图片" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-upload v-decorator="['equipmentLogo', validatorRules.equipmentLogo]" :trigger-change="true"></j-upload>
+              <j-image-upload isMultiple="false"
+                              v-decorator="['equipmentLogo',validatorRules.equipmentLogo]"
+                              :trigger-change="true"></j-image-upload>
             </a-form-item>
           </a-col>
           <a-divider type="horizontal" />
@@ -238,6 +240,7 @@ import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
 import JDictSelectTag from "@/components/dict/JDictSelectTag"
 import JTreeSelect from "@comp/jeecg/JTreeSelect";
 import {getAction} from "@api/manage";
+import JImageUpload from "@comp/jeecg/JImageUpload";
 
 export default {
   name: 'WmEquipmentInfoModal',
@@ -251,6 +254,7 @@ export default {
     JSelectDepart,
     JSelectUserByDep,
     JDictSelectTag,
+    JImageUpload
   },
   data() {
     return {
