@@ -93,7 +93,8 @@
         </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
-
+          <a-divider type="vertical" />
+          <a @click="showDetail(record)">详情查看</a>
           <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -111,6 +112,7 @@
     </div>
 
     <wmEquipmentInfo-modal ref="modalForm" @ok="modalFormOk"></wmEquipmentInfo-modal>
+    <wm-equipment-info-detail ref="modalDetail" @ok="modalFormOk"></wm-equipment-info-detail>
   </a-card>
 </template>
 
@@ -118,13 +120,15 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import WmEquipmentInfoModal from './modules/WmEquipmentInfoModal'
+  import WmEquipmentInfoDetail from './modules/WmEquipmentInfoDetail'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "WmEquipmentInfoList",
     mixins:[JeecgListMixin],
     components: {
-      WmEquipmentInfoModal
+      WmEquipmentInfoModal,
+      WmEquipmentInfoDetail
     },
     data () {
       return {
@@ -275,8 +279,16 @@
     },
     methods: {
       initDictConfig(){
+      },
+      /**
+       * 查看明细
+       * @param record
+       */
+      showDetail:function(record){
+        this.$refs.modalDetail.edit(record);
+        this.$refs.modalDetail.title="详情";
+        this.$refs.modalDetail.disableSubmit = true;
       }
-
     }
   }
 </script>

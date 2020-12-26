@@ -5,8 +5,10 @@
     :visible="visible"
     :maskClosable="false"
     :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel">
+    @cancel="handleCancel"
+    @ok="handleCancel"
+    :footer="{}"
+  >
     <a-spin :spinning="confirmLoading">
       <!-- 主表单区域 -->
       <a-form :form="form">
@@ -41,6 +43,11 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
+            <a-form-item label="设备编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input :disabled="visible" v-decorator="[ 'equipmentCode', validatorRules.equipmentCode]" placeholder="请输入设备编号"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
             <a-form-item label="折旧率" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-input-number v-decorator="[ 'depreciationRate', validatorRules.depreciationRate]" placeholder="请输入折旧率"
                               style="width: 100%"/>
@@ -72,8 +79,15 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="设备图片" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-image-upload isMultiple="false"
+              <j-image-upload disabled isMultiple="false"
                               v-decorator="['equipmentLogo',validatorRules.equipmentLogo]"
+                              :trigger-change="true"></j-image-upload>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item label="设备二维码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-image-upload disabled isMultiple="false"
+                              v-decorator="['equipmentQrcode',validatorRules.equipmentQrcode]"
                               :trigger-change="true"></j-image-upload>
             </a-form-item>
           </a-col>
@@ -344,6 +358,9 @@ export default {
         equipmentLogo: {
           rules: []
         },
+        equipmentQrcode: {
+          rules: []
+        },
         equipmentCode: {
           rules: []
         },
@@ -485,7 +502,7 @@ export default {
     /** 调用完edit()方法之后会自动调用此方法 */
     editAfter() {
       // let fieldval = pick(this.model, 'equipmentType', 'equipmentName', 'equipmentAliasName', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
-      let fieldval = pick(this.model, 'equipmentType', 'equipmentName','depreciateDay', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
+      let fieldval = pick(this.model, 'equipmentType','equipmentCode', 'equipmentQrcode','equipmentName','depreciateDay', 'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode')
       this.$nextTick(() => {
         this.form.setFieldsValue(fieldval)
         this.$refs.wmInviteBidForm.initFormData(this.url.wmInviteBid.list, this.model.id)
@@ -521,7 +538,7 @@ export default {
     },
     popupCallback(row) {
       // 'equipmentAliasName',
-      this.form.setFieldsValue(pick(row, 'equipmentType', 'equipmentName','depreciateDay','equipmentCode',  'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode'))
+      this.form.setFieldsValue(pick(row, 'equipmentType','equipmentQrcode', 'equipmentName','depreciateDay','equipmentCode',  'equipmentModel', 'depreciationRate', 'procurementPrice', 'procurementNumber', 'measureState', 'equipmentScrap', 'equipmentLogo', 'originManufacturerId', 'saleManufacturerId', 'useDept', 'chargePerson', 'chargeArea', 'startUseTime', 'maintainDay', 'measureDay', 'contractCode'))
     },
 
   }
