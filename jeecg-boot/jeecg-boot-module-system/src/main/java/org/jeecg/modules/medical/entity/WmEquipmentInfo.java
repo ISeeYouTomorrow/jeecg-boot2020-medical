@@ -156,7 +156,7 @@ public class WmEquipmentInfo implements Serializable {
     private java.lang.String contractCode;
 	/** 设备状态 0=默认(闲置) 1=已使用 2=已借用 3=维修 4=保养  5=计量 8=报废*/
     @Excel(name = "设备状态", width = 15)
-    @ApiModelProperty(value = "合同编号")
+    @ApiModelProperty(value = "设备状态")
 	private String equipmentStatus;
 
     /** 下次计量时间,首次默认为启用时间+计量周期*/

@@ -37,7 +37,7 @@
           <!--          </a-col>-->
           <a-col :span="8">
             <a-form-item label="设备型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input :disabled="visible" v-decorator="[ 'equipmentModel', validatorRules.equipmentModel]" placeholder="请输入设备型号"></a-input>
+              <a-input v-decorator="[ 'equipmentModel', validatorRules.equipmentModel]" placeholder="请输入设备型号"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="8">
@@ -54,7 +54,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="采购数量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number :disabled="visible" v-decorator="[ 'procurementNumber', validatorRules.procurementNumber]"
+              <a-input-number v-decorator="[ 'procurementNumber', validatorRules.procurementNumber]"
                               placeholder="请输入采购数量" style="width: 100%"/>
             </a-form-item>
           </a-col>
@@ -72,7 +72,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="设备图片" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-image-upload isMultiple="false"
+              <j-image-upload :isMultiple="multipleImg"
                               v-decorator="['equipmentLogo',validatorRules.equipmentLogo]"
                               :trigger-change="true"></j-image-upload>
             </a-form-item>
@@ -258,6 +258,7 @@ export default {
   },
   data() {
     return {
+      multipleImg: false,
       isAdd: true,
       //生产厂商
       originManufacturer: {

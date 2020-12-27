@@ -66,7 +66,8 @@ module.exports = {
         }
       }, */
       '/wisdom-medical': {
-        target: 'http://106.15.238.203:8888', // 请求本地 需要jeecg-boot后台项目
+        // target: 'http://106.15.238.203:8888', // 请求本地 需要jeecg-boot后台项目
+        target: 'http://127.0.0.1:8888', // 请求本地 需要jeecg-boot后台项目
         ws: false,
         changeOrigin: true
       }

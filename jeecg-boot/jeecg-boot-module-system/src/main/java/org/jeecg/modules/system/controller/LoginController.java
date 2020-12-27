@@ -1,5 +1,6 @@
 package org.jeecg.modules.system.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.exceptions.ClientException;
@@ -18,12 +19,16 @@ import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysDepart;
+import org.jeecg.modules.system.entity.SysPermission;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.model.SysLoginModel;
 import org.jeecg.modules.system.service.ISysDepartService;
 import org.jeecg.modules.system.service.ISysLogService;
+import org.jeecg.modules.system.service.ISysPermissionService;
 import org.jeecg.modules.system.service.ISysUserService;
+import org.jeecg.modules.system.util.PermissionDataUtil;
 import org.jeecg.modules.system.util.RandImageUtil;
+import org.jeecg.modules.system.vo.SysUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +55,9 @@ public class LoginController {
     private RedisUtil redisUtil;
 	@Autowired
     private ISysDepartService sysDepartService;
-	
+	@Autowired
+	private ISysPermissionService sysPermissionService;
+
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
 	@ApiOperation("登录接口")
@@ -78,14 +85,14 @@ public class LoginController {
 			return result;
 		}
 		//update-end-author:taoyan date:20190828 for:校验验证码
-		
+
 		//1. 校验用户是否有效
 		SysUser sysUser = sysUserService.getUserByName(username);
 		result = sysUserService.checkUserIsEffective(sysUser);
 		if(!result.isSuccess()) {
 			return result;
 		}
-		
+
 		//2. 校验用户名或密码是否正确
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
@@ -93,14 +100,14 @@ public class LoginController {
 			result.error500("用户名或密码错误");
 			return result;
 		}
-				
+
 		//用户登录信息
 		userInfo(sysUser, result);
 		sysBaseAPI.addLog("用户名: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
 
 		return result;
 	}
-	
+
 	/**
 	 * 退出登录
 	 * @param request
@@ -132,7 +139,7 @@ public class LoginController {
 	    	return Result.error("Token无效!");
 	    }
 	}
-	
+
 	/**
 	 * 获取访问量
 	 * @return
@@ -163,7 +170,7 @@ public class LoginController {
 		result.success("登录成功");
 		return result;
 	}
-	
+
 	/**
 	 * 获取访问量
 	 * @return
@@ -184,8 +191,8 @@ public class LoginController {
 		result.setResult(oConvertUtils.toLowerCasePageList(list));
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * 登陆成功选择用户当前部门
 	 * @param user
@@ -210,7 +217,7 @@ public class LoginController {
 
 	/**
 	 * 短信登录接口
-	 * 
+	 *
 	 * @param jsonObject
 	 * @return
 	 */
@@ -255,7 +262,7 @@ public class LoginController {
 				if(!result.isSuccess()) {
 					return result;
 				}
-				
+
 				/**
 				 * smsmode 短信模板方式  0 .登录模板、1.注册模板、2.忘记密码模板
 				 */
@@ -287,11 +294,11 @@ public class LoginController {
 		}
 		return result;
 	}
-	
+
 
 	/**
 	 * 手机号登录接口
-	 * 
+	 *
 	 * @param jsonObject
 	 * @return
 	 */
@@ -300,14 +307,14 @@ public class LoginController {
 	public Result<JSONObject> phoneLogin(@RequestBody JSONObject jsonObject) {
 		Result<JSONObject> result = new Result<JSONObject>();
 		String phone = jsonObject.getString("mobile");
-		
+
 		//校验用户有效性
 		SysUser sysUser = sysUserService.getUserByPhone(phone);
 		result = sysUserService.checkUserIsEffective(sysUser);
 		if(!result.isSuccess()) {
 			return result;
 		}
-		
+
 		String smscode = jsonObject.getString("captcha");
 		Object code = redisUtil.get(phone);
 		if (!smscode.equals(code)) {
@@ -371,7 +378,7 @@ public class LoginController {
 		result.setResult(map);
 		return result;
 	}
-	
+
 	/**
 	 * 获取校验码
 	 */
@@ -421,7 +428,7 @@ public class LoginController {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * app登录
 	 * @param sysLoginModel
@@ -429,18 +436,18 @@ public class LoginController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/mLogin", method = RequestMethod.POST)
-	public Result<JSONObject> mLogin(@RequestBody SysLoginModel sysLoginModel) throws Exception {
-		Result<JSONObject> result = new Result<JSONObject>();
+	public Result<SysUserVO> mLogin(@RequestBody SysLoginModel sysLoginModel) throws Exception {
+		Result<SysUserVO> result = new Result<>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
-		
+
 		//1. 校验用户是否有效
 		SysUser sysUser = sysUserService.getUserByName(username);
 		result = sysUserService.checkUserIsEffective(sysUser);
 		if(!result.isSuccess()) {
 			return result;
 		}
-		
+
 		//2. 校验用户名或密码是否正确
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
@@ -448,7 +455,7 @@ public class LoginController {
 			result.error500("用户名或密码错误");
 			return result;
 		}
-		
+
 		String orgCode = sysUser.getOrgCode();
 		if(oConvertUtils.isEmpty(orgCode)) {
 			//如果当前用户无选择部门 查看部门关联信息
@@ -461,18 +468,34 @@ public class LoginController {
 			sysUser.setOrgCode(orgCode);
 			this.sysUserService.updateUserDepart(username, orgCode);
 		}
-		JSONObject obj = new JSONObject();
-		//用户登录信息
-		obj.put("userInfo", sysUser);
-		
+//		JSONObject obj = new JSONObject();
+//		//用户登录信息
+//		obj.put("userInfo", sysUser);
+
 		// 生成token
 		String token = JwtUtil.sign(username, syspassword);
 		// 设置超时时间
 		redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
 		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME*2 / 1000);
 		//token 信息
-		obj.put("token", token);
-		result.setResult(obj);
+//		obj.put("token", token);
+
+		List<SysPermission> metaList = sysPermissionService.queryByUser(username);
+		StringBuffer sb = new StringBuffer();
+		metaList.forEach(it->{
+			if (PermissionDataUtil.appMenuMap.containsKey(it.getId())) {
+				sb.append(PermissionDataUtil.appMenuMap.get(it.getId()));
+				sb.append(",");
+			}
+		});
+
+		SysUserVO vo = new SysUserVO();
+		BeanUtil.copyProperties(sysUser, vo);
+		vo.setToken(token);
+		vo.setPermission(sb.toString());
+
+		result.setResult(vo);
+
 		result.setSuccess(true);
 		result.setCode(200);
 		sysBaseAPI.addLog("用户名: " + username + ",登录成功[移动端]！", CommonConstant.LOG_TYPE_1, null);

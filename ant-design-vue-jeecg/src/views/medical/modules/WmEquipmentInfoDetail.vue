@@ -7,8 +7,10 @@
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     @ok="handleCancel"
-    :footer="{}"
   >
+    <template slot="footer">
+      <a-button @click="handleCancel">关闭</a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <!-- 主表单区域 -->
       <a-form :form="form">

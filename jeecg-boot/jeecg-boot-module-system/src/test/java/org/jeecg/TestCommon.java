@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class TestCommon {
 
@@ -65,5 +66,13 @@ public class TestCommon {
         }
 
 
+    }
+
+    @Test
+    public void testCheckCode() throws UnsupportedEncodingException {
+        String code = "1290";
+        String encode = java.util.Base64.getEncoder().encodeToString(code.getBytes("UTF-8"));
+        String _code = new String(java.util.Base64.getDecoder().decode(encode),"UTF-8");
+        System.out.println(_code);
     }
 }

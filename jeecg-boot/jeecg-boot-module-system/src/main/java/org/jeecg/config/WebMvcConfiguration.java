@@ -12,11 +12,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Spring Boot 2.0 解决跨域问题
- * 
+ *
  * @Author qinfeng
  *
  */
-@Configuration
+//@Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	@Value("${jeecg.path.upload}")

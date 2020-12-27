@@ -2,6 +2,7 @@ server:
   port: 8888
   tomcat:
     max-swallow-size: -1
+    basedir: C:/Work/upFiles/
   servlet:
     context-path: /wisdom-medical
   compression:
@@ -96,9 +97,9 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://106.15.238.203:3306/wisdom_medical?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
-          username: poc
-          password: Poc2020.com
+          url: jdbc:mysql://localhost:3306/wisdom_medical?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
+          username: root
+          password: root
           driver-class-name: com.mysql.jdbc.Driver
           # 多数据源配置
           #multi-datasource1:

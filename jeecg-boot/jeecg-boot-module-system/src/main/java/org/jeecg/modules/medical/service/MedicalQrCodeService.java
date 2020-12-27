@@ -34,16 +34,16 @@ public class MedicalQrCodeService {
     /**
      * 二维码宽度
      */
-    private static final Integer WIDTH = 200;
+    private static final Integer WIDTH = 120;
     /**
      * 二维码高度
      */
-    private static final Integer HEIGHT = 200;
+    private static final Integer HEIGHT = 120;
 
     /**
      * 二维码格式
      */
-    private final static String JPG = ".jpg";
+    private final static String PNG = ".png";
 
     /**
      * 二维码图片路径
@@ -60,8 +60,8 @@ public class MedicalQrCodeService {
         StringBuffer sb = new StringBuffer();
         sb.append("{");
         sb.append("\"id\":\"").append(wmAreaSpace.getId()).append("\",");
-        sb.append("\"areaCode\":\"").append(wmAreaSpace.getAreaCode()).append("\",");
-        sb.append("\"areaName\":\"").append(wmAreaSpace.getAreaName()).append("\"");
+        sb.append("\"areaCode\":\"").append(wmAreaSpace.getAreaCode()).append("\"");
+//        sb.append("\"areaName\":\"").append(wmAreaSpace.getAreaName()).append("\"");
         sb.append("}");
 
         String json = sb.toString();
@@ -73,8 +73,9 @@ public class MedicalQrCodeService {
             file.mkdirs();// 创建文件根目录
         }
         fileName = wmAreaSpace.getAreaCode() + "_"+ System.currentTimeMillis() ;
-        String destPath = bizPath + fileName + JPG;
-        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
+        String destPath = bizPath + fileName + PNG;
+//        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
+        org.jeecg.modules.medical.util.QrCodeUtil.generateQrcode(WIDTH, HEIGHT,uploadpath+destPath,json);
         log.info("生成区域二维码图片路径: {}",destPath);
         return destPath;
     }
@@ -89,17 +90,18 @@ public class MedicalQrCodeService {
         StringBuffer sb = new StringBuffer();
         sb.append("{");
         sb.append("\"id\":\"").append(equipmentInfo.getId()).append("\",");
-        sb.append("\"areaCode\":\"").append(equipmentInfo.getEquipmentCode()).append("\",");
-        sb.append("\"areaName\":\"").append(equipmentInfo.getEquipmentName()).append("\"");
+        sb.append("\"equipmentCode\":\"").append(equipmentInfo.getEquipmentCode()).append("\"");
         sb.append("}");
+//        sb.append("http://id/").append(equipmentInfo.getId());
 
         String json = sb.toString();
         log.debug("MedicaQrCodeService.equipmentQrCode {}",json);
         String fileName = null;
 
         fileName = equipmentInfo.getEquipmentCode() + "_"+ System.currentTimeMillis() ;
-        String destPath = getBizPath() + fileName + JPG;
-        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
+        String destPath = getBizPath() + fileName + PNG;
+        org.jeecg.modules.medical.util.QrCodeUtil.generateQrcode(WIDTH, HEIGHT,uploadpath+destPath,json);
+//        QrCodeUtil.generate(json, WIDTH, HEIGHT, FileUtil.file(uploadpath+destPath));
         log.info("生成设备二维码图片路径: {}",destPath);
         return destPath;
     }
