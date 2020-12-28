@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.medical.mapper.WmEquipmentOnloanPageMapper">
-    
+
     <resultMap id="wmEquipmentOnloanPageResult" type="org.jeecg.modules.medical.vo.WmEquipmentOnloanVO">
         <result column="id" property="id" jdbcType="VARCHAR"/>
         <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
@@ -19,24 +19,36 @@
         <result column="equipment_name" property="equipmentName" jdbcType="VARCHAR"/>
         <result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR"/>
         <result column="equipment_model" property="equipmentModel" jdbcType="VARCHAR"/>
+        <result column="equipment_logo" property="equipmentLogo" jdbcType="VARCHAR"/>
     </resultMap>
-    
+
     <!-- 根据条件分页查询设备借用 -->
     <select id="queryForPage" resultMap="wmEquipmentOnloanPageResult">
         SELECT a.id,a.create_by,a.create_time,a.update_by,a.update_time,a.sys_org_code,a.equipment_id,a.onloan_dept,a.onloan_person,
         a.onloan_area,a.onloan_status,a.onloan_date,a.return_date,
-        b.equipment_name,b.equipment_code,b.equipment_model
+        b.equipment_name,b.equipment_code,b.equipment_model,b.equipment_logo
         FROM wm_equipment_onloan a ,wm_equipment_info b
         WHERE a.equipment_id = b.id
         <if test="onloanPerson != null and onloanPerson !=''">
             AND a.onloan_person = #{onloanPerson,jdbcType=VARCHAR}
         </if>
-        <if test="equipmentName != null and equipmentName !=''">
-            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
-        </if>
-        <if test="equipmentCode != null and equipmentCode !=''">
-            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
-        </if>
+        <choose>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">
+                AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))
+            </when>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode == null and equipmentCode ==''">
+                AND b.equipment_name like CONCAT('%',#{equipmentName},'%')
+            </when>
+            <when test="equipmentName == null and equipmentName =='' and equipmentCode != null and equipmentCode !=''">
+                AND b.equipment_code like CONCAT('%',#{equipmentCode},'%')
+            </when>
+        </choose>
+<!--        <if test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">-->
+<!--            AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))-->
+<!--        </if>-->
+<!--        <if test="equipmentCode != null and equipmentCode !=''">-->
+<!--            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}-->
+<!--        </if>-->
         order by a.create_time desc
     </select>
 </mapper>

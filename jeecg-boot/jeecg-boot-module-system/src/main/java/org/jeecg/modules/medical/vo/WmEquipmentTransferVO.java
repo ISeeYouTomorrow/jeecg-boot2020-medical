@@ -117,4 +117,9 @@ public class WmEquipmentTransferVO implements Serializable {
     @ApiModelProperty(value = "设备型号")
     private String equipmentModel;
 
+    /**
+     * logo
+     */
+    private String equipmentLogo;
+
 }

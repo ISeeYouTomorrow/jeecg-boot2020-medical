@@ -96,4 +96,6 @@ public class WmEquipmentOnloanVO implements Serializable {
      * 设备型号
      */
     private String equipmentModel;
+
+    private String equipmentLogo;
 }

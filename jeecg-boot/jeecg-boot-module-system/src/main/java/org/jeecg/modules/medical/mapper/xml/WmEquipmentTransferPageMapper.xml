@@ -21,6 +21,7 @@
         <result column="equipment_name" property="equipmentName" jdbcType="VARCHAR"/>
         <result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR"/>
         <result column="equipment_model" property="equipmentModel" jdbcType="VARCHAR"/>
+        <result column="equipment_logo" property="equipmentLogo" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 查询转科信息 -->
@@ -43,17 +44,29 @@
           a.old_area,
           b.equipment_code,
           b.equipment_model,
-          b.equipment_name
+          b.equipment_name,
+          b.equipment_logo
         FROM
           wm_equipment_transfer a,
           wm_equipment_info b
         WHERE a.equipment_id = b.id
-        <if test="equipmentName != null and equipmentName !=''">
-            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
-        </if>
-        <if test="equipmentCode != null and equipmentCode !=''">
-            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
-        </if>
+        <choose>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">
+                AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))
+            </when>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode == null and equipmentCode ==''">
+                AND b.equipment_name like CONCAT('%',#{equipmentName},'%')
+            </when>
+            <when test="equipmentName == null and equipmentName =='' and equipmentCode != null and equipmentCode !=''">
+                AND b.equipment_code like CONCAT('%',#{equipmentCode},'%')
+            </when>
+        </choose>
+<!--        <if test="equipmentName != null and equipmentName !=''">-->
+<!--            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}-->
+<!--        </if>-->
+<!--        <if test="equipmentCode != null and equipmentCode !=''">-->
+<!--            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}-->
+<!--        </if>-->
         order by a.create_time desc
     </select>
 </mapper>
