@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 public class WmManufacturerInfoController extends JeecgController<WmManufacturerInfo, IWmManufacturerInfoService> {
 	@Autowired
 	private IWmManufacturerInfoService wmManufacturerInfoService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -47,15 +48,19 @@ public class WmManufacturerInfoController extends JeecgController<WmManufacturer
 	@ApiOperation(value="厂商信息管理-分页列表查询", notes="厂商信息管理-分页列表查询")
 	@GetMapping(value = "/list")
 	public Result<?> queryPageList(WmManufacturerInfo wmManufacturerInfo,
+								   @RequestParam(name="search", required = false) String search,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<WmManufacturerInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmManufacturerInfo, req.getParameterMap());
+		if (StringUtils.isNotEmpty(search)) {
+			queryWrapper.like("manufacturer_name", search);
+		}
 		Page<WmManufacturerInfo> page = new Page<WmManufacturerInfo>(pageNo, pageSize);
 		IPage<WmManufacturerInfo> pageList = wmManufacturerInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -69,7 +74,7 @@ public class WmManufacturerInfoController extends JeecgController<WmManufacturer
 		wmManufacturerInfoService.save(wmManufacturerInfo);
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -83,7 +88,7 @@ public class WmManufacturerInfoController extends JeecgController<WmManufacturer
 		wmManufacturerInfoService.updateById(wmManufacturerInfo);
 		return Result.ok("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -97,7 +102,7 @@ public class WmManufacturerInfoController extends JeecgController<WmManufacturer
 		wmManufacturerInfoService.removeById(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -111,7 +116,7 @@ public class WmManufacturerInfoController extends JeecgController<WmManufacturer
 		this.wmManufacturerInfoService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

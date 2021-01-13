@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
@@ -49,7 +51,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IWmAdverseEventService> {
 	@Autowired
 	private IWmAdverseEventService wmAdverseEventService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -63,15 +65,20 @@ public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IW
 	@ApiOperation(value="设备不良事件-分页列表查询", notes="设备不良事件-分页列表查询")
 	@GetMapping(value = "/list")
 	public Result<?> queryPageList(WmAdverseEvent wmAdverseEvent,
+								   @RequestParam(name="search", required = false) String search,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<WmAdverseEvent> queryWrapper = QueryGenerator.initQueryWrapper(wmAdverseEvent, req.getParameterMap());
+		if (StringUtils.isNotEmpty(search)) {
+			queryWrapper.like("person_name", search);
+		}
+
 		Page<WmAdverseEvent> page = new Page<WmAdverseEvent>(pageNo, pageSize);
 		IPage<WmAdverseEvent> pageList = wmAdverseEventService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -85,7 +92,7 @@ public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IW
 		wmAdverseEventService.save(wmAdverseEvent);
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -99,7 +106,7 @@ public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IW
 		wmAdverseEventService.updateById(wmAdverseEvent);
 		return Result.ok("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -113,7 +120,7 @@ public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IW
 		wmAdverseEventService.removeById(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -127,7 +134,7 @@ public class WmAdverseEventController extends JeecgController<WmAdverseEvent, IW
 		this.wmAdverseEventService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

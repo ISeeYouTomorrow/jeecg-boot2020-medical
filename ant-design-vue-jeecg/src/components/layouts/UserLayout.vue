@@ -4,26 +4,27 @@
       <div class="top">
         <div class="header">
           <a href="/">
-            <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">九福云</span>
+            <img src="~@/assets/logo_green.png" class="logo" alt="logo">
+<!--            <span class="title">九福云</span>-->
           </a>
         </div>
-        <div class="desc">
-          智慧医疗设备全生命周期管控平台
-        </div>
+<!--        <div class="desc">-->
+<!--          河南九福云网络科技有限公司-->
+<!--        </div>-->
       </div>
 
       <route-view></route-view>
 
       <div class="footer">
-        <div class="links">
-          <a href="http://www.9fuy.com/" target="_blank">帮助</a>
-          <a href="http://www.9fuy.com/" target="_blank">隐私</a>
-          <a href="http://www.9fuy.com/" target="_blank">条款</a>
-<!--          <a href="https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE" target="_blank">条款</a>-->
-        </div>
+<!--        <div class="links">-->
+<!--          <a href="http://www.9fuy.com/" target="_blank">帮助</a>-->
+<!--          <a href="http://www.9fuy.com/" target="_blank">隐私</a>-->
+<!--          <a href="http://www.9fuy.com/" target="_blank">条款</a>-->
+<!--&lt;!&ndash;          <a href="https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE" target="_blank">条款</a>&ndash;&gt;-->
+<!--        </div>-->
         <div class="copyright">
-          Copyright &copy; 2019 <a href="http://www.9fuy.com/" target="_blank">九福云</a> 出品
+<!--          Copyright &copy; 2020 <a href="http://www.9fuy.com/" target="_blank">九福云</a> 出品-->
+          @ 智慧医疗设备全生命周期管控平台
         </div>
       </div>
     </div>
@@ -66,7 +67,8 @@
     .container {
       width: 100%;
       min-height: 100%;
-      background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+      //background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+      background: #f0f2f5 url(~@/assets/backg.png) no-repeat 50%;
       background-size: 100%;
       padding: 110px 0 144px;
       position: relative;
@@ -79,7 +81,7 @@
         text-align: center;
 
         .header {
-          height: 44px;
+          height: 100px;
           line-height: 44px;
 
           .badge {
@@ -93,7 +95,9 @@
           }
 
           .logo {
-            height: 44px;
+            margin-top: 60px;
+            width: 80px;
+            height: 117px;
             vertical-align: top;
             margin-right: 16px;
             border-style: none;
@@ -109,17 +113,21 @@
           }
         }
         .desc {
-          font-size: 14px;
+          font-size: 18px;
           color: rgba(0, 0, 0, 0.45);
+          font-weight: bold;
           margin-top: 12px;
-          margin-bottom: 40px;
+          margin-bottom: 20px;
         }
       }
 
       .main {
-        min-width: 260px;
-        width: 368px;
+        padding-top: 80px;
+        min-width: 300px;
+        width: 480px;
         margin: 0 auto;
+        background: #ffffff;
+        border-radius: 10px;
       }
 
       .footer {

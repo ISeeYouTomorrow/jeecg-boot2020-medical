@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 public class WmCertificateInfoController extends JeecgController<WmCertificateInfo, IWmCertificateInfoService> {
 	@Autowired
 	private IWmCertificateInfoService wmCertificateInfoService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -47,15 +48,19 @@ public class WmCertificateInfoController extends JeecgController<WmCertificateIn
 	@ApiOperation(value="厂商证书管理-分页列表查询", notes="厂商证书管理-分页列表查询")
 	@GetMapping(value = "/list")
 	public Result<?> queryPageList(WmCertificateInfo wmCertificateInfo,
+								   @RequestParam(name="search", required = false) String search,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<WmCertificateInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmCertificateInfo, req.getParameterMap());
+		if (StringUtils.isNotEmpty(search)) {
+			queryWrapper.and(wrapper -> wrapper.like("certificate_name", search).or().like("certificate_code", search));
+		}
 		Page<WmCertificateInfo> page = new Page<WmCertificateInfo>(pageNo, pageSize);
 		IPage<WmCertificateInfo> pageList = wmCertificateInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -69,7 +74,7 @@ public class WmCertificateInfoController extends JeecgController<WmCertificateIn
 		wmCertificateInfoService.save(wmCertificateInfo);
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -83,7 +88,7 @@ public class WmCertificateInfoController extends JeecgController<WmCertificateIn
 		wmCertificateInfoService.updateById(wmCertificateInfo);
 		return Result.ok("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -97,7 +102,7 @@ public class WmCertificateInfoController extends JeecgController<WmCertificateIn
 		wmCertificateInfoService.removeById(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -111,7 +116,7 @@ public class WmCertificateInfoController extends JeecgController<WmCertificateIn
 		this.wmCertificateInfoService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

@@ -5,7 +5,7 @@
         :activeKey="customActiveKey"
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick">
-        <a-tab-pane key="tab1" tab="账号密码登陆">
+        <a-tab-pane key="tab1" tab="账号密码登录">
           <a-form-item>
             <a-input
               size="large"
@@ -49,7 +49,7 @@
 
 
         </a-tab-pane>
-<!--        <a-tab-pane key="tab2" tab="手机号登陆">-->
+<!--        <a-tab-pane key="tab2" tab="手机号登录">-->
 <!--          <a-form-item>-->
 <!--            <a-input-->
 <!--              v-decorator="['mobile',validatorRules.mobile]"-->
@@ -82,14 +82,14 @@
 <!--            </a-col>-->
 <!--          </a-row>-->
 <!--        </a-tab-pane>-->
-      </a-tabs>
+        登录   </a-tabs>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登陆</a-checkbox>
-        <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
+        <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登录</a-checkbox>
+        <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;display: none;">
           忘记密码
         </router-link>
-       <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
+       <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;display: none;" >
           注册账户
         </router-link>
       </a-form-item>
@@ -102,12 +102,12 @@
           class="login-button"
           :loading="loginBtn"
           @click.stop.prevent="handleSubmit"
-          :disabled="loginBtn">确定
+          :disabled="loginBtn">登录
         </a-button>
       </a-form-item>
 
       <!-- <div class="user-login-other">
-        <span>其他登陆方式</span>
+        <span>其他登录方式</span>
         <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
@@ -157,9 +157,6 @@
           </a-select>
         </a-form-item>
       </a-form>
-
-
-
     </a-modal>
 
   </div>
@@ -251,7 +248,7 @@
         let that = this
         let loginParams = {};
         that.loginBtn = true;
-        // 使用账户密码登陆
+        // 使用账户密码登录
         if (that.customActiveKey === 'tab1') {
           that.form.validateFields([ 'username', 'password','inputCode', 'rememberMe' ], { force: true }, (err, values) => {
             if (!err) {
@@ -276,7 +273,7 @@
               that.loginBtn = false;
             }
           })
-          // 使用手机号登陆
+          // 使用手机号登录
         } else {
           that.form.validateFields([ 'mobile', 'captcha', 'rememberMe' ], { force: true }, (err, values) => {
             if (!err) {
@@ -489,6 +486,8 @@
 <style lang="less" scoped>
 
   .user-layout-login {
+    //background-color: rgba(0, 191, 191, 0.149019607843137);
+    padding: 10px 20px 10px 20px;
     label {
       font-size: 14px;
     }
@@ -508,6 +507,7 @@
       font-size: 16px;
       height: 40px;
       width: 100%;
+      background: #31CAB0;
     }
 
     .user-login-other {
@@ -524,7 +524,7 @@
         transition: color .3s;
 
         &:hover {
-          color: #1890ff;
+          color: #31CAB0;
         }
       }
 

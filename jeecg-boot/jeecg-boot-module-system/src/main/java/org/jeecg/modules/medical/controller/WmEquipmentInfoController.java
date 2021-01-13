@@ -245,9 +245,9 @@ public class WmEquipmentInfoController {
 		wmEquipmentInfo.setUpdateTime(date);
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 		wmEquipmentInfo.setUpdateBy(sysUser.getUsername());
-
-		String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
-		wmEquipmentInfo.setEquipmentQrcode(path);
+		//编辑时不用生成二维码
+//		String path = qrCodeService.equipmentQrCode(wmEquipmentInfo);
+//		wmEquipmentInfo.setEquipmentQrcode(path);
 
 		wmEquipmentInfo.setStartUseTime(date);
 		if (StringUtils.equals(wmEquipmentInfo.getMeasureState(), "1")) {

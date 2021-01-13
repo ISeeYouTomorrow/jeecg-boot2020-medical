@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.bean.BeanUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.medical.entity.WmContractInfo;
@@ -42,7 +43,7 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 
 	@Autowired
 	private IWmManufacturerInfoService wmManufacturerInfoService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -56,15 +57,19 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 	@ApiOperation(value="厂商合同信息管理-分页列表查询", notes="厂商合同信息管理-分页列表查询")
 	@GetMapping(value = "/list")
 	public Result<?> queryPageList(WmContractInfo wmContractInfo,
+								   @RequestParam(name="search", required = false) String search,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<WmContractInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmContractInfo, req.getParameterMap());
+		if (StringUtils.isNotEmpty(search)) {
+			queryWrapper.and(wrapper -> wrapper.like("contract_name", search).or().like("contract_code", search));
+		}
 		Page<WmContractInfo> page = new Page<WmContractInfo>(pageNo, pageSize);
 		IPage<WmContractInfo> pageList = wmContractInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -78,7 +83,7 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 		wmContractInfoService.save(wmContractInfo);
 		return Result.ok("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -92,7 +97,7 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 		wmContractInfoService.updateById(wmContractInfo);
 		return Result.ok("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -106,7 +111,7 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 		wmContractInfoService.removeById(id);
 		return Result.ok("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -120,7 +125,7 @@ public class WmContractInfoController extends JeecgController<WmContractInfo, IW
 		this.wmContractInfoService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

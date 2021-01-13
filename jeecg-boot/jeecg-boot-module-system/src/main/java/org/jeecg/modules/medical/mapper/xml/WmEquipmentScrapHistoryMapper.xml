@@ -10,12 +10,23 @@
           b.equipment_type,
           b.equipment_model FROM wm_equipment_scrap_history a ,wm_equipment_info b
           WHERE a.equipment_id = b.id
-          <if test="equipmentName != null and equipmentName !=''">
-            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
-          </if>
-          <if test="equipmentCode != null and equipmentCode !=''">
-            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
-          </if>
+            <choose>
+                <when test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">
+                    AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))
+                </when>
+                <when test="equipmentName != null and equipmentName !='' and equipmentCode == null and equipmentCode ==''">
+                    AND b.equipment_name like CONCAT('%',#{equipmentName},'%')
+                </when>
+                <when test="equipmentName == null and equipmentName =='' and equipmentCode != null and equipmentCode !=''">
+                    AND b.equipment_code like CONCAT('%',#{equipmentCode},'%')
+                </when>
+            </choose>
+<!--          <if test="equipmentName != null and equipmentName !=''">-->
+<!--            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}-->
+<!--          </if>-->
+<!--          <if test="equipmentCode != null and equipmentCode !=''">-->
+<!--            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}-->
+<!--          </if>-->
           ORDER BY a.scrap_state ASC, a.create_time DESC
     </select>
 </mapper>

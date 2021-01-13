@@ -205,6 +205,7 @@
       //设备巡检
       handleExamine () {
         if (this.selectionRows.length === 0) {
+          this.$message.warning('请选择巡检设备');
           return
         }
         this.equipmentExamine(this.selectionRows[0])

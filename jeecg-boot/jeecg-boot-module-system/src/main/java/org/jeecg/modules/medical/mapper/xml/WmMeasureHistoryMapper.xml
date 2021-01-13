@@ -100,12 +100,23 @@
           wm_equipment_info b,
           wm_measure_plan c
         WHERE a.equipment_id = b.id AND a.measure_plan_id = c.id
-        <if test="equipmentName != null and equipmentName !=''">
-            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
-        </if>
-        <if test="equipmentCode != null and equipmentCode !=''">
-            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
-        </if>
+        <choose>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">
+                AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))
+            </when>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode == null and equipmentCode ==''">
+                AND b.equipment_name like CONCAT('%',#{equipmentName},'%')
+            </when>
+            <when test="equipmentName == null and equipmentName =='' and equipmentCode != null and equipmentCode !=''">
+                AND b.equipment_code like CONCAT('%',#{equipmentCode},'%')
+            </when>
+        </choose>
+<!--        <if test="equipmentName != null and equipmentName !=''">-->
+<!--            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}-->
+<!--        </if>-->
+<!--        <if test="equipmentCode != null and equipmentCode !=''">-->
+<!--            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}-->
+<!--        </if>-->
         order by a.measure_status asc, a.create_time desc
     </select>
 
@@ -158,12 +169,23 @@
         wm_measure_plan c
         WHERE a.equipment_id = b.id AND a.measure_plan_id = c.id
         AND a.measure_status in ('2','3')
-        <if test="equipmentName != null and equipmentName !=''">
-            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}
-        </if>
-        <if test="equipmentCode != null and equipmentCode !=''">
-            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
-        </if>
+        <choose>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode != null and equipmentCode !=''">
+                AND (b.equipment_name like CONCAT('%',#{equipmentName},'%') or b.equipment_code like CONCAT('%',#{equipmentCode},'%'))
+            </when>
+            <when test="equipmentName != null and equipmentName !='' and equipmentCode == null and equipmentCode ==''">
+                AND b.equipment_name like CONCAT('%',#{equipmentName},'%')
+            </when>
+            <when test="equipmentName == null and equipmentName =='' and equipmentCode != null and equipmentCode !=''">
+                AND b.equipment_code like CONCAT('%',#{equipmentCode},'%')
+            </when>
+        </choose>
+<!--        <if test="equipmentName != null and equipmentName !=''">-->
+<!--            AND b.equipment_name = #{equipmentName,jdbcType=VARCHAR}-->
+<!--        </if>-->
+<!--        <if test="equipmentCode != null and equipmentCode !=''">-->
+<!--            AND b.equipment_code = #{equipmentCode,jdbcType=VARCHAR}-->
+<!--        </if>-->
         order by a.measure_status asc, a.create_time desc
     </select>
 </mapper>
