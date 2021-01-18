@@ -106,11 +106,15 @@ public class WmEquipmentInfoController {
 	@ApiOperation(value = "设备档案信息-分页列表查询", notes = "设备档案信息-分页列表查询")
 	@GetMapping(value = "/listNoUse")
 	public Result<?> listNoUse(WmEquipmentInfo wmEquipmentInfo,
+							   @RequestParam(name = "searchTxt",required = false) String searchTxt,
 							   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 							   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
 							   HttpServletRequest req) {
 		QueryWrapper<WmEquipmentInfo> queryWrapper = QueryGenerator.initQueryWrapper(wmEquipmentInfo, req.getParameterMap());
 		queryWrapper.eq("equipment_status", "0");
+		if (StringUtils.isNotEmpty(searchTxt)) {
+			queryWrapper.and(qw->qw.like("equipment_name", searchTxt).or().like("equipment_code", searchTxt));
+		}
 		Page<WmEquipmentInfo> page = new Page<>(pageNo, pageSize);
 		IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);

@@ -364,4 +364,17 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 		}
 		return orgCode;
 	}
+
+	/**
+	 * 查询所有未删除部门
+	 * @return
+	 */
+	@Override
+	public List<SysDepart> queryAllDeparts() {
+		LambdaQueryWrapper<SysDepart> query = new LambdaQueryWrapper<SysDepart>();
+		query.eq(SysDepart::getDelFlag, CommonConstant.DEL_FLAG_0.toString());
+		query.orderByAsc(SysDepart::getDepartOrder);
+		List<SysDepart> list = this.list(query);
+		return list;
+	}
 }
