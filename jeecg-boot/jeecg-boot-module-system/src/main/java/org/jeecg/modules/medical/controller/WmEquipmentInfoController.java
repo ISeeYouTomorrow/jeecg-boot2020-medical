@@ -166,6 +166,7 @@ public class WmEquipmentInfoController {
 			queryWrapper.or();
 			queryWrapper.like("equipment_code", searchTxt);
 		}
+		queryWrapper.orderByAsc("equipment_status");
 		Page<WmEquipmentInfo> page = new Page<>(pageNo, pageSize);
 		IPage<WmEquipmentInfo> pageList = wmEquipmentInfoService.page(page, queryWrapper);
 		return Result.ok(pageList);
